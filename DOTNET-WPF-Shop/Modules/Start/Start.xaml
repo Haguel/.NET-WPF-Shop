@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="Start" Height="450" Width="800">
     <Grid>
-        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Image Source="/Static/Logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Stretch="UniformToFill"/>
+                <TextBlock Text="Please sign in if you have an account or sign up." FontSize="14"
+                           HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,0,20" Grid.Row="1">
+                <Button Content="Sign up" Background="#DE493F" Foreground="White" Width="200" Height="40" Margin="0,0,0,10" Click="Signup_Click"/>
+                <Button Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Width="200" Height="40" Click="Signin_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
