@@ -14,14 +14,23 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Start
 {
-    /// <summary>
-    /// Логика взаимодействия для Start.xaml
-    /// </summary>
     public partial class Start : Window
     {
+        new StartProvider provider = new StartProvider();
+
         public Start()
         {
             InitializeComponent();
+        }
+
+        private void Signup_Click(object sender, RoutedEventArgs e)
+        {
+            provider.RedirectToSignupPage(this);
+        }
+
+        private void Signin_Click(object sender, RoutedEventArgs e)
+        {
+            provider.RedirectToSigninPage(this);
         }
     }
 }

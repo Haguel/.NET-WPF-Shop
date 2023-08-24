@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Static\Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Entities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Static\Logo.png" />
   </ItemGroup>
 
 </Project>
