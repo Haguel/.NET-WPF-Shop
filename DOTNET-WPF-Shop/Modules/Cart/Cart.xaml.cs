@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DOTNET_WPF_Shop
+namespace DOTNET_WPF_Shop.Modules.Cart
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для Cart.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Cart : Window
     {
-        public MainWindow()
+        public Cart()
         {
             InitializeComponent();
         }
