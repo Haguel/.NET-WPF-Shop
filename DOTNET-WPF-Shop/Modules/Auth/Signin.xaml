@@ -4,9 +4,45 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Auth"
+        xmlns:global="clr-namespace:DOTNET_WPF_Shop.Modules"
         mc:Ignorable="d"
         Title="Signin" Height="450" Width="800">
-    <Grid>
-        
+    <Window.Resources>
+        <global:ViewConfig x:Key="globalViewConfig" />
+        <local:ViewConfig x:Key="localViewConfig" />
+
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="{Binding Source={StaticResource globalViewConfig}, Path=defaultFontSize}"/>
+            <Setter Property="Width" Value="{Binding Source={StaticResource localViewConfig}, Path=textBoxWidth}"/>
+            <Setter Property="Height" Value="{Binding Source={StaticResource localViewConfig}, Path=textBoxHeight}"/>
+        </Style>
+    </Window.Resources>
+    <Grid MaxHeight="250">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="{Binding Source={StaticResource globalViewConfig}, Path=bigFontSize}">
+            Sign in
+        </TextBlock>
+        <TextBox Grid.Row="1">Email</TextBox>
+        <TextBox Grid.Row="2">Password</TextBox>
+        <StackPanel Grid.Row="3"  VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Width="150" Height="30" Foreground="White" Margin="0 0 20 0"
+                    Background="{Binding Source={StaticResource globalViewConfig}, Path=acceptColor}"
+                    FontSize="{Binding Source={StaticResource globalViewConfig}, Path=defaultFontSize}">
+                Done
+            </Button>
+            <Button Height="30" Foreground="DarkGray" BorderBrush="Transparent"
+                    Background="Transparent"
+                    FontSize="{Binding Source={StaticResource globalViewConfig}, Path=smallFontSize}">
+                Back
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>
