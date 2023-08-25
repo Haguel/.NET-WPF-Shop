@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Start"
+        xmlns:global="clr-namespace:DOTNET_WPF_Shop.Modules"
         mc:Ignorable="d"
         Title="Start" Height="450" Width="800">
+    <Window.Resources>
+        <global:ViewConfig x:Key="viewConfig" />
+    </Window.Resources>
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -22,12 +26,15 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
                 <Image Source="/Static/Logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Stretch="UniformToFill"/>
-                <TextBlock Text="Please sign in if you have an account or sign up." FontSize="14"
+                <TextBlock Text="Please sign in if you have an account or sign up." 
+                           FontSize="{Binding Source={StaticResource viewConfig}, Path=bigFontSize}"
                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,0,20" Grid.Row="1">
-                <Button Content="Sign up" Background="#DE493F" Foreground="White" Width="200" Height="40" Margin="0,0,0,10" Click="Signup_Click"/>
-                <Button Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Width="200" Height="40" Click="Signin_Click"/>
+                <Button Content="Sign up" Background="#DE493F" Foreground="White" Width="200" Height="40" Margin="0,0,0,10" Click="Signup_Click"
+                        FontSize="{Binding Source={StaticResource viewConfig}, Path=defaultFontSize}"/>
+                <Button Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Width="200" Height="40" Click="Signin_Click"
+                        FontSize="{Binding Source={StaticResource viewConfig}, Path=defaultFontSize}"/>
             </StackPanel>
         </Grid>
     </Grid>

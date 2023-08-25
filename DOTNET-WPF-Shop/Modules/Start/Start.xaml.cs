@@ -16,7 +16,7 @@ namespace DOTNET_WPF_Shop.Modules.Start
 {
     public partial class Start : Window
     {
-        new StartProvider provider = new StartProvider();
+        StartProvider provider = new StartProvider();
 
         public Start()
         {
