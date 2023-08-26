@@ -3,10 +3,37 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Main"
+        xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
         Title="Main" Height="450" Width="800">
+    <Window.Resources>
+        <common:GlobalProperties x:Key="globalProperties" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="50"></RowDefinition>
+            <RowDefinition Height="*" MinHeight="50"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="10 0 10 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Image Source="/Static/Logo.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Stretch="UniformToFill"/>
+            </Grid>
+            <common:HorizontalPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <TextBox Width="180" Height="25" Background="#EAEAEA" BorderBrush="#D3D3D3" Foreground="#757575" 
+                         FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}">
+                    Search
+                </TextBox>
+                <Image Source="/Static/Cart.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="28" Height="28" Stretch="UniformToFill" Margin="10 0 0 0"/>
+            </common:HorizontalPanel>
+        </Grid>
+        <common:HorizontalPanel Grid.Row="1" HorizontalAlignment="Left" Margin="10 0 10 0">
+            <TextBlock Foreground="#757575" FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}"
+                       VerticalAlignment="Center">Sort by:</TextBlock>
+        </common:HorizontalPanel>
     </Grid>
 </Window>
