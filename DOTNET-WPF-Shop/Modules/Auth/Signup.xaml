@@ -3,21 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Auth"
-        xmlns:global="clr-namespace:DOTNET_WPF_Shop.Modules"
+        xmlns:authCommon="clr-namespace:DOTNET_WPF_Shop.Common.Auth"
+        xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
         Title="Signup" Height="450" Width="800">
     <Window.Resources>
-        <global:ViewConfig x:Key="globalViewConfig" />
-        <local:ViewConfig x:Key="localViewConfig" />
-
-        <Style TargetType="TextBox">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{Binding Source={StaticResource globalViewConfig}, Path=defaultFontSize}"/>
-            <Setter Property="Width" Value="{Binding Source={StaticResource localViewConfig}, Path=textBoxWidth}"/>
-            <Setter Property="Height" Value="{Binding Source={StaticResource localViewConfig}, Path=textBoxHeight}"/>
-        </Style>
+        <common:GlobalProperties x:Key="globalProperties" />
     </Window.Resources>
     <Grid MaxHeight="300">
         <Grid.RowDefinitions>
@@ -27,24 +18,15 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   FontSize="{Binding Source={StaticResource globalViewConfig}, Path=bigFontSize}">
-            Sign up
-        </TextBlock>
-        <TextBox Grid.Row="1">Username</TextBox>
-        <TextBox Grid.Row="2">Email</TextBox>
-        <TextBox Grid.Row="3">Password</TextBox>
-        <StackPanel Grid.Row="4"  VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-            <Button Width="150" Height="30" Foreground="White" Margin="0 0 20 0"
-                    Background="{Binding Source={StaticResource globalViewConfig}, Path=acceptColor}"
-                    FontSize="{Binding Source={StaticResource globalViewConfig}, Path=defaultFontSize}">
+        <authCommon:AuthTitle Grid.Row="0">Sign up</authCommon:AuthTitle>
+        <authCommon:AuthTextBox Grid.Row="1">Username</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox Grid.Row="2">Email</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox Grid.Row="3">Password</authCommon:AuthTextBox>
+        <common:HorizontalCenteredPanel Grid.Row="4">
+            <common:AcceptButton  Width="150" Height="30" Foreground="White" Margin="0 0 20 0">
                 Done
-            </Button>
-            <Button Height="30" Foreground="DarkGray" BorderBrush="Transparent"
-                    Background="Transparent"
-                    FontSize="{Binding Source={StaticResource globalViewConfig}, Path=smallFontSize}">
-                Back
-            </Button>
-        </StackPanel>
+            </common:AcceptButton>
+            <common:CancelButton Height="30">Back</common:CancelButton>
+        </common:HorizontalCenteredPanel>
     </Grid>
 </Window>

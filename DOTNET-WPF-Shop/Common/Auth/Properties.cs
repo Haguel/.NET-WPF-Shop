@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTNET_WPF_Shop.Modules.Auth
+namespace DOTNET_WPF_Shop.Common.Auth
 {
-    public class ViewConfig
+    internal class Properties
     {
         public int textBoxWidth { get; } = 300;
         public int textBoxHeight { get; } = 40;

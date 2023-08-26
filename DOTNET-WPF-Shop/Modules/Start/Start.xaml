@@ -3,21 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Start"
-        xmlns:global="clr-namespace:DOTNET_WPF_Shop.Modules"
+        xmlns:startCommon="clr-namespace:DOTNET_WPF_Shop.Common.Start"
+        xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
         Title="Start" Height="450" Width="800">
     <Window.Resources>
-        <global:ViewConfig x:Key="globalViewConfig" />
-        <local:ViewConfig x:Key="localViewConfig" />
-
-        <Style TargetType="Button">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{Binding Source={StaticResource globalViewConfig}, Path=defaultFontSize}"/>
-            <Setter Property="Width" Value="{Binding Source={StaticResource localViewConfig}, Path=buttonWidth}"/>
-            <Setter Property="Height" Value="{Binding Source={StaticResource localViewConfig}, Path=buttonHeight}"/>
-        </Style>
+        <common:GlobalProperties x:Key="globalProperties" />
     </Window.Resources>
     <Grid>
         <Grid>
@@ -36,13 +27,13 @@
             <StackPanel Grid.Row="0">
                 <Image Source="/Static/Logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="40" Stretch="UniformToFill"/>
                 <TextBlock Text="Please sign in if you have an account or sign up." 
-                           FontSize="{Binding Source={StaticResource globalViewConfig}, Path=bigFontSize}"
+                           FontSize="{Binding Source={StaticResource globalProperties}, Path=bigFontSize}"
                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,0,20" Grid.Row="1">
-                <Button Content="Sign up" Foreground="White" Margin="0,0,0,10" Click="Signup_Click"
-                        Background="{Binding Source={StaticResource globalViewConfig}, Path=mainColor}"/>
-                <Button Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Click="Signin_Click"/>
+                <startCommon:StartButton Content="Sign up" Foreground="White" Margin="0,0,0,10" Click="Signup_Click"
+                        Background="{Binding Source={StaticResource globalProperties}, Path=mainColor}"/>
+                <startCommon:StartButton Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Click="Signin_Click"/>
             </StackPanel>
         </Grid>
     </Grid>
