@@ -1,5 +1,5 @@
 ﻿<Application x:Class="DOTNET_WPF_Shop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="Modules/Start/Start.xaml">
+             StartupUri="Modules/Main/Main.xaml">
 </Application>
