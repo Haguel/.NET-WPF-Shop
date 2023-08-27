@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {
-    /// <summary>
-    /// Логика взаимодействия для Signin.xaml
-    /// </summary>
     public partial class Signin : Window
     {
         public Signin()
