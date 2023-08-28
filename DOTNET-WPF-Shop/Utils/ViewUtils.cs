@@ -8,9 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace DOTNET_WPF_Shop
+namespace DOTNET_WPF_Shop.Utils
 {
-    class Utils
+    class ViewUtils
     {
         private GlobalProperties globalProperties = new GlobalProperties();
         public enum FontSizes
@@ -26,7 +26,7 @@ namespace DOTNET_WPF_Shop
             element.VerticalAlignment = VerticalAlignment.Center;
         }
 
-        public void SetFontSize(FrameworkElement element, FontSizes fontSizes) 
+        public void SetFontSize(FrameworkElement element, FontSizes fontSizes)
         {
             int currentFontSize = globalProperties.defaultFontSize;
 
@@ -34,8 +34,8 @@ namespace DOTNET_WPF_Shop
             else if (fontSizes == FontSizes.Default) currentFontSize = globalProperties.defaultFontSize;
             else if (fontSizes == FontSizes.Big) currentFontSize = globalProperties.bigFontSize;
 
-            if(element is Control control) control.FontSize = currentFontSize;
-            if(element is TextBlock textBlock) textBlock.FontSize = currentFontSize;
+            if (element is Control control) control.FontSize = currentFontSize;
+            if (element is TextBlock textBlock) textBlock.FontSize = currentFontSize;
         }
 
         public void SetSizes(FrameworkElement element, int width, int height)

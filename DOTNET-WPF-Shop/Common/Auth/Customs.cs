@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DOTNET_WPF_Shop.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,11 @@ namespace DOTNET_WPF_Shop.Common.Auth
         public AuthTextBox()
         {
             Properties properties = new Properties();
-            Utils utils = new Utils();
+            ViewUtils viewUtils = new ViewUtils();
 
-            utils.SetCenterAlignment(this);
-            utils.SetFontSize(this, Utils.FontSizes.Default);
-            utils.SetSizes(this, properties.textBoxWidth, properties.textBoxHeight);
+            viewUtils.SetCenterAlignment(this);
+            viewUtils.SetFontSize(this, ViewUtils.FontSizes.Default);
+            viewUtils.SetSizes(this, properties.textBoxWidth, properties.textBoxHeight);
         }
     }
 
@@ -25,10 +26,10 @@ namespace DOTNET_WPF_Shop.Common.Auth
     {
         public AuthTitle()
         {
-            Utils utils = new Utils();
+            ViewUtils viewUtils = new ViewUtils();
 
-            utils.SetCenterAlignment(this);
-            utils.SetFontSize(this, Utils.FontSizes.Big);
+            viewUtils.SetCenterAlignment(this);
+            viewUtils.SetFontSize(this, ViewUtils.FontSizes.Big);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DOTNET_WPF_Shop.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,12 @@ namespace DOTNET_WPF_Shop.Common
         public AcceptButton()
         {
             GlobalProperties globalProperties = new GlobalProperties();
-            Utils utils = new Utils();
+            ViewUtils viewUtils = new ViewUtils();
 
-            utils.SetCenterAlignment(this);
-            utils.SetFontSize(this, Utils.FontSizes.Default);
+            viewUtils.SetCenterAlignment(this);
+            viewUtils.SetFontSize(this, ViewUtils.FontSizes.Default);
 
-            this.Background = utils.getSolidColorBrushFromHex(globalProperties.acceptColor);
+            this.Background = viewUtils.getSolidColorBrushFromHex(globalProperties.acceptColor);
         }
     }
 
@@ -26,10 +27,9 @@ namespace DOTNET_WPF_Shop.Common
     {
         public CancelButton()
         {
-            GlobalProperties globalProperties = new GlobalProperties();
-            Utils utils = new Utils();
+            ViewUtils viewUtils = new ViewUtils();
 
-            utils.SetFontSize(this, Utils.FontSizes.Small);
+            viewUtils.SetFontSize(this, ViewUtils.FontSizes.Small);
 
             this.Background = new SolidColorBrush(Colors.Transparent);
             this.BorderBrush = new SolidColorBrush(Colors.Transparent);
@@ -49,9 +49,9 @@ namespace DOTNET_WPF_Shop.Common
     {
         public HorizontalCenteredPanel()
         {
-            Utils utils = new Utils();
+            ViewUtils viewUtils = new ViewUtils();
 
-            utils.SetCenterAlignment(this);
+            viewUtils.SetCenterAlignment(this);
         }
     }
 }
