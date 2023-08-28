@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DOTNET_WPF_Shop.Modules.User;
+using DOTNET_WPF_Shop.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +18,35 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 {
     public partial class Signup : Window
     {
+        AuthProvider provider = new AuthProvider();
+
         public Signup()
         {
             InitializeComponent();
+        }
+
+        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            provider.HandleTextBoxUnfocus(sender as TextBox);
+        }
+
+        private void TextBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            provider.HandleTextBoxFocus(sender as TextBox);
+        }
+
+        private void AcceptButtonClick(object sender, RoutedEventArgs e)
+        {
+            SignupUserDto signupUserDto = new()
+            {
+                username = usernameField.Text,
+                email = emailField.Text,
+                password = passwordField.Text,
+            };
+
+            bool isDataValid = new ProviderUtils().ValidateDto(signupUserDto);
+
+            if (isDataValid) provider.Signup(signupUserDto);
         }
     }
 }
