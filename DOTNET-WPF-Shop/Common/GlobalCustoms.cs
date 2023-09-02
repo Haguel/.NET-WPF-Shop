@@ -20,6 +20,7 @@ namespace DOTNET_WPF_Shop.Common
             viewUtils.SetFontSize(this, ViewUtils.FontSizes.Default);
 
             this.Background = viewUtils.getSolidColorBrushFromHex(globalProperties.acceptColor);
+            this.Foreground = new SolidColorBrush(Colors.White);
         }
     }
 

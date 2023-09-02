@@ -37,5 +37,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
             new UserProvider().Create(createUserDto);
         }
+
+        public void Signin(SigninUserDto signinUserDto) { }
     }
 }

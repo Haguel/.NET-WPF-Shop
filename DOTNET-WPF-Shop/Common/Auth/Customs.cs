@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -30,6 +31,18 @@ namespace DOTNET_WPF_Shop.Common.Auth
 
             viewUtils.SetCenterAlignment(this);
             viewUtils.SetFontSize(this, ViewUtils.FontSizes.Big);
+        }
+    }
+
+    public class AuthDoneButton : AcceptButton
+    {
+        public AuthDoneButton()
+        {
+            Properties properties = new Properties();
+            ViewUtils viewUtils = new ViewUtils();
+
+            viewUtils.SetSizes(this, properties.buttonWidth, properties.buttonHeight);
+            this.Margin = new Thickness(0, 0, 20, 0);
         }
     }
 }

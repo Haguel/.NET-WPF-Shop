@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="Signup" Height="450" Width="800">
     <Window.Resources>
+        <authCommon:Properties x:Key="authProperties" />
         <common:GlobalProperties x:Key="globalProperties" />
     </Window.Resources>
     <Grid MaxHeight="300">
@@ -23,10 +24,10 @@
         <authCommon:AuthTextBox x:Name="emailField" Grid.Row="2" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
         <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="3" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
         <common:HorizontalCenteredPanel Grid.Row="4">
-            <common:AcceptButton  Width="150" Height="30" Foreground="White" Margin="0 0 20 0" Click="AcceptButtonClick">
+            <authCommon:AuthDoneButton Click="AcceptButtonClick">
                 Done
-            </common:AcceptButton>
-            <common:CancelButton Height="30">Back</common:CancelButton>
+            </authCommon:AuthDoneButton>
+            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}">Back</common:CancelButton>
         </common:HorizontalCenteredPanel>
     </Grid>
 </Window>
