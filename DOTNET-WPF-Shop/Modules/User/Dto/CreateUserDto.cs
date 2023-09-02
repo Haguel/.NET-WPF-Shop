@@ -10,8 +10,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth.Dto
 {
     class CreateUserDto
     {
-        public string username { get; set; }
-        public string email { get; set; }
-        public string passwordHash { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
     }
 }
