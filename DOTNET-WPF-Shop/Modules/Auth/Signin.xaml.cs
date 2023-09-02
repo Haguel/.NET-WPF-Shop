@@ -40,13 +40,22 @@ namespace DOTNET_WPF_Shop.Modules.Auth
         {
             SigninUserDto signupUserDto = new()
             {
-                email = emailField.Text,
-                password = passwordField.Text,
+                Email = emailField.Text,
+                Password = passwordField.Text,
             };
 
             bool isDataValid = new ProviderUtils().ValidateDto(signupUserDto);
 
-            if (isDataValid) provider.Signin(signupUserDto);
+            try
+            {      
+                if (isDataValid) provider.Signin(signupUserDto);
+            } 
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            provider.RedirectToMainPage(this);
         }
     }
 }
