@@ -13,11 +13,11 @@ namespace DOTNET_WPF_Shop.Modules.Auth.Dto
         [Required(ErrorMessage = "Email is required")]
         [Display(Name = "email")]
         [EmailAddress(ErrorMessage = "Invalid email")]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [Display(Name = "password")]
         [MinLength(6, ErrorMessage = "Password minimum length is 6 characters")]
-        public string password { get; set; }
+        public string Password { get; set; }
     }
 }

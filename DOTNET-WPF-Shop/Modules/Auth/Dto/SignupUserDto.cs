@@ -14,16 +14,16 @@ namespace DOTNET_WPF_Shop.Modules.User
         [Display(Name = "username")]
         [MinLength(6, ErrorMessage = "Username minimum length is 6 characters")]
         [MaxLength(50, ErrorMessage = "Username minimum length is 6 characters")]
-        public string username { get; set; }
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [Display(Name = "email")]
         [EmailAddress(ErrorMessage = "Invalid email")]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [Display(Name = "password")]
         [MinLength(6, ErrorMessage = "Password minimum length is 6 characters")]
-        public string password { get; set; }
+        public string Password { get; set; }
     }
 }

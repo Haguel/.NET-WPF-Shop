@@ -1,4 +1,7 @@
-﻿using DOTNET_WPF_Shop.Modules.Auth.Dto;
+﻿using DOTNET_WPF_Shop.DB;
+using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.Auth.Dto;
+using DOTNET_WPF_Shop.Modules.Main;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,13 +14,31 @@ namespace DOTNET_WPF_Shop.Modules.User
 {
     class UserProvider
     {
-        public void findUserByEmail(string email) { }
+        private DataContext dataContext;
+
+        public UserProvider() { dataContext = new(); }
+
+        public UserEntity findUserByEmail(string email)
+        {
+            var user = dataContext.Users
+                .FirstOrDefault(u => u.Email == email);
+
+            return user;
+        }
+
 
         public void Create(CreateUserDto createUserDto)
         {
-            MessageBox.Show(createUserDto.username);
-            MessageBox.Show(createUserDto.email);
-            MessageBox.Show(createUserDto.passwordHash);
+            UserEntity newUser = new()
+            {
+                Id = Guid.NewGuid(),
+                Username = createUserDto.Username,
+                Email = createUserDto.Email,
+                PasswordHash = createUserDto.PasswordHash
+            };
+
+            dataContext.Users.Add(newUser);
+            dataContext.SaveChanges();
         }
     }
 }
