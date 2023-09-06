@@ -35,5 +35,24 @@
             <TextBlock Foreground="#757575" FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}"
                        VerticalAlignment="Center">Sort by:</TextBlock>
         </common:HorizontalPanel>
+        <ListView ItemsSource="{Binding Products}" Grid.Row="2">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="3" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5">
+                        <StackPanel>
+                            <Image Source="{Binding Path=Image}" Height="130" Width="200" />
+                            <TextBlock Text="{Binding Path=Title}" FontWeight="Bold" Margin="5" />
+                            <TextBlock Text="{Binding Path=Price, StringFormat='Price: {0:C}'}" Margin="5" />
+                            <Button Content="Buy" Margin="5" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Window>

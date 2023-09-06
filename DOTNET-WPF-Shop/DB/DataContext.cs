@@ -12,6 +12,7 @@ namespace DOTNET_WPF_Shop.DB
         private string DbName = "DOTNET-WPF-SHOP";
 
         public DbSet<Entities.UserEntity> Users { get; set; }
+        public DbSet<Entities.ProductEntity> Products { get; set; }
 
         public DataContext() : base() { }
 
