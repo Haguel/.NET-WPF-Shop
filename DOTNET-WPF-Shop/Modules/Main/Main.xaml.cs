@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DOTNET_WPF_Shop.DB;
+using DOTNET_WPF_Shop.DB.Entities;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +17,18 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Main
 {
-    /// <summary>
-    /// Логика взаимодействия для Main.xaml
-    /// </summary>
     public partial class Main : Window
     {
+        private MainProvider provider = new();
+        public ObservableCollection<ProductEntity> Products { get; set; }
+
         public Main()
         {
             InitializeComponent();
+
+            //provider.InsertTest();
+            Products = provider.GetProducts();
+            this.DataContext = this;
         }
     }
 }
