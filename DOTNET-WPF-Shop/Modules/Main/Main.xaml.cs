@@ -26,7 +26,6 @@ namespace DOTNET_WPF_Shop.Modules.Main
         {
             InitializeComponent();
 
-            //provider.InsertTest();
             Products = provider.GetProducts();
             this.DataContext = this;
         }

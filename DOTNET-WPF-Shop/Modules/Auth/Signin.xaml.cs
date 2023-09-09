@@ -36,6 +36,11 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HandleTextBoxFocus(sender as TextBox);
         }
 
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            provider.HidePage(this);
+        }
+
         private void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             SigninUserDto signupUserDto = new()

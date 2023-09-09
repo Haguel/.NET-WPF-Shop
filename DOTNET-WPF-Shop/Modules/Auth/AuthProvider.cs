@@ -5,6 +5,7 @@ using DOTNET_WPF_Shop.Modules.Auth.Dto;
 using DOTNET_WPF_Shop.Modules.Main;
 using DOTNET_WPF_Shop.Modules.Start;
 using DOTNET_WPF_Shop.Modules.User;
+using DOTNET_WPF_Shop.Modules.User.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,6 +37,11 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             new Main.Main().ShowDialog();
         }
 
+        public void HidePage(Window view)
+        {
+            view.Hide();
+        }
+
         public void Signup(SignupUserDto signupUserDto)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(signupUserDto.Password);
@@ -47,7 +53,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                 PasswordHash = passwordHash
             };
 
-            UserEntity user = userProvider.findUserByEmail(signupUserDto.Email);
+            UserEntity user = userProvider.GetByEmail(signupUserDto.Email);
 
             if (user != null) throw new Exception("User already exists");
 
@@ -56,13 +62,36 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         public void Signin(SigninUserDto signinUserDto) 
         {
-            UserEntity user = userProvider.findUserByEmail(signinUserDto.Email);
+            UserEntity user = userProvider.GetByEmail(signinUserDto.Email);
 
             if (user == null) throw new Exception("User doesn't exist");
 
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(signinUserDto.Password, user.PasswordHash);
 
             if(!isPasswordCorrect) throw new Exception("Incorrect password");
+        }
+
+        public void ChangePassword(ChangePassswordDto changePasswordDto)
+        {
+            UserEntity user = userProvider.GetByEmail(changePasswordDto.Email);
+
+            if (user == null) throw new Exception("User doesn't exist");
+
+            bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(changePasswordDto.OldPassword, user.PasswordHash);
+
+            if (!isPasswordCorrect) throw new Exception("Incorrect password");
+
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+
+            UpdateUserDto updateUserDto = new()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Username = user.Username,
+                PasswordHash = passwordHash
+            };
+
+            userProvider.Update(updateUserDto);
         }
     }
 }
