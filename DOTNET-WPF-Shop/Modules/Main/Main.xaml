@@ -48,7 +48,7 @@
                             <Image Source="{Binding Path=ImageSrc}" Height="130" Width="200" />
                             <TextBlock Text="{Binding Path=Title}" FontWeight="Bold" Margin="5" />
                             <TextBlock Text="{Binding Path=Price, StringFormat='Price: {0:C}'}" Margin="5" />
-                            <Button Content="Buy" Margin="5" />
+                            <Button Content="Buy" Margin="5" Click="BuyButtonClick"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>

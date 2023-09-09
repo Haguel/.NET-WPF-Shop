@@ -21,25 +21,37 @@ namespace DOTNET_WPF_Shop.Modules.User
 
         public UserEntity GetByEmail(string email)
         {
-            var user = dataContext.Users
+            var user = dataContext
+                .Users
                 .FirstOrDefault(u => u.Email == email);
 
             return user;
         }
 
+        public UserEntity GetById(Guid id)
+        {
+            var user = dataContext
+                .Users
+                .FirstOrDefault(u => u.Id == id);
 
-        public void Create(CreateUserDto createUserDto)
+            return user;
+        }
+
+        public UserEntity Create(CreateUserDto createUserDto)
         {
             UserEntity newUser = new()
             {
                 Id = Guid.NewGuid(),
                 Username = createUserDto.Username,
                 Email = createUserDto.Email,
-                PasswordHash = createUserDto.PasswordHash
+                PasswordHash = createUserDto.PasswordHash,
+                Cart = new CartEntity()
             };
 
             dataContext.Users.Add(newUser);
             dataContext.SaveChanges();
+
+            return newUser;
         }
 
         public void Update(UpdateUserDto updateUserDto)

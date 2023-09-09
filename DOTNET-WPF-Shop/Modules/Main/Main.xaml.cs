@@ -29,5 +29,10 @@ namespace DOTNET_WPF_Shop.Modules.Main
             Products = provider.GetProducts();
             this.DataContext = this;
         }
+
+        private void BuyButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(this.Tag.ToString());
+        }
     }
 }

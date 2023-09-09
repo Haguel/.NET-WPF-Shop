@@ -31,10 +31,13 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             if (textBox.Text == textBox.Tag as string) textBox.Text = "";
         }
 
-        public void RedirectToMainPage(Window view)
+        public void RedirectToMainPage(Window view, Guid userId)
         {
             view.Hide();
-            new Main.Main().ShowDialog();
+
+            Main.Main main = new();
+            main.Tag = userId;
+            main.ShowDialog();
         }
 
         public void HidePage(Window view)
@@ -42,7 +45,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             view.Hide();
         }
 
-        public void Signup(SignupUserDto signupUserDto)
+        public UserEntity Signup(SignupUserDto signupUserDto)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(signupUserDto.Password);
 
@@ -57,10 +60,10 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
             if (user != null) throw new Exception("User already exists");
 
-            userProvider.Create(createUserDto);
+            return userProvider.Create(createUserDto);
         }
 
-        public void Signin(SigninUserDto signinUserDto) 
+        public UserEntity Signin(SigninUserDto signinUserDto) 
         {
             UserEntity user = userProvider.GetByEmail(signinUserDto.Email);
 
@@ -69,6 +72,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(signinUserDto.Password, user.PasswordHash);
 
             if(!isPasswordCorrect) throw new Exception("Incorrect password");
+
+            return user;
         }
 
         public void ChangePassword(ChangePassswordDto changePasswordDto)

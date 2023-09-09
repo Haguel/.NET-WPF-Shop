@@ -1,4 +1,5 @@
-﻿using DOTNET_WPF_Shop.Modules.Auth.Dto;
+﻿using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.Auth.Dto;
 using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Utils;
 using System;
@@ -43,19 +44,22 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         private void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
-            SigninUserDto signupUserDto = new()
+            SigninUserDto signinUserDto = new()
             {
                 Email = emailField.Text,
                 Password = passwordField.Text,
             };
 
-            bool isDataValid = new ProviderUtils().ValidateDto(signupUserDto);
+            bool isDataValid = new ProviderUtils().ValidateDto(signinUserDto);
 
             try
-            {      
-                if (isDataValid) provider.Signin(signupUserDto);
+            {
+                if (isDataValid)
+                {
+                    UserEntity user = provider.Signin(signinUserDto);
 
-                provider.RedirectToMainPage(this);
+                    provider.RedirectToMainPage(this, user.Id);
+                }
             } 
             catch (Exception ex) 
             {
