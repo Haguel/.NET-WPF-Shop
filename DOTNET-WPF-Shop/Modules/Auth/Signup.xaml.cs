@@ -1,4 +1,5 @@
-﻿using DOTNET_WPF_Shop.Modules.User;
+﻿using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Utils;
 using System;
 using System.Collections.Generic;
@@ -53,9 +54,12 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
             try
             {
-                if (isDataValid) provider.Signup(signupUserDto);
+                if (isDataValid)
+                {
+                    UserEntity user = provider.Signup(signupUserDto);
 
-                provider.RedirectToMainPage(this);
+                    provider.RedirectToMainPage(this, user.Id);
+                }
             }
             catch (Exception ex)
             {

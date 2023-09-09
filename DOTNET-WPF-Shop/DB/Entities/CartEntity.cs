@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace DOTNET_WPF_Shop.DB.Entities
 {
-    public class UserEntity
+    public class CartEntity
     {
         public Guid Id { get; set; }
-        public String Username { get; set; }
-        public String Email { get; set; }
-        public String PasswordHash { get; set; }
+        public Guid UserId { get; set; }
 
-        public CartEntity Cart { get; set; }
+        public UserEntity User { get; set; }
+        public List<ProductEntity> Products { get; set; }
     }
 }
