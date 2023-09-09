@@ -25,7 +25,7 @@
             <authCommon:AuthDoneButton Click="AcceptButtonClick">
                 Done
             </authCommon:AuthDoneButton>
-            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}">Back</common:CancelButton>
+            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="BackButtonClick">Back</common:CancelButton>
         </common:HorizontalCenteredPanel>
     </Grid>
 </Window>

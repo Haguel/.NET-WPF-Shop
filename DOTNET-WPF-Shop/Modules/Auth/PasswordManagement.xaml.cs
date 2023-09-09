@@ -1,4 +1,5 @@
-﻿using DOTNET_WPF_Shop.Modules.User;
+﻿using DOTNET_WPF_Shop.Modules.Auth.Dto;
+using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,11 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {
-    public partial class Signup : Window
+    public partial class PasswordManagement : Window
     {
         AuthProvider provider = new AuthProvider();
 
-        public Signup()
+        public PasswordManagement()
         {
             InitializeComponent();
         }
@@ -35,25 +36,25 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HandleTextBoxFocus(sender as TextBox);
         }
 
-        private void BackButtonClick(object sender, RoutedEventArgs e) 
+        private void BackButtonClick(object sender, RoutedEventArgs e)
         {
             provider.HidePage(this);
         }
 
         private void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
-            SignupUserDto signupUserDto = new()
+            ChangePassswordDto changePasswordDto = new()
             {
-                Username = usernameField.Text,
                 Email = emailField.Text,
-                Password = passwordField.Text,
+                OldPassword = oldPasswordField.Text,
+                NewPassword = newPasswordField.Text,
             };
 
-            bool isDataValid = new ProviderUtils().ValidateDto(signupUserDto);
+            bool isDataValid = new ProviderUtils().ValidateDto(changePasswordDto);
 
             try
             {
-                if (isDataValid) provider.Signup(signupUserDto);
+                if (isDataValid) provider.ChangePassword(changePasswordDto);
             }
             catch (Exception ex)
             {

@@ -22,5 +22,12 @@ namespace DOTNET_WPF_Shop.Modules.Start
             new Signin().ShowDialog();
             view.Show();
         }
+
+        public void RedirectToPasswordManagementPage(Start view)
+        {
+            view.Hide();
+            new PasswordManagement().ShowDialog();
+            view.Show();
+        }
     }
 }
