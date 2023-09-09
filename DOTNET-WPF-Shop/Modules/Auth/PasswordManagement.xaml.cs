@@ -55,13 +55,13 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             try
             {
                 if (isDataValid) provider.ChangePassword(changePasswordDto);
+
+                this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            provider.RedirectToMainPage(this);
         }
     }
 }

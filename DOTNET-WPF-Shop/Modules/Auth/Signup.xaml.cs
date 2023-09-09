@@ -54,13 +54,13 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             try
             {
                 if (isDataValid) provider.Signup(signupUserDto);
+
+                provider.RedirectToMainPage(this);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-            provider.RedirectToMainPage(this);
         }
     }
 }
