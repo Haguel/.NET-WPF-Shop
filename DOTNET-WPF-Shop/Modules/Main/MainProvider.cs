@@ -15,20 +15,17 @@ namespace DOTNET_WPF_Shop.Modules.Main
 {
     public class MainProvider
     {
-        private ProductProvider productProvider = new();
-        private UserProvider userProvider = new();
-        private CartProvider cartProvider = new();
         DataContext dataContext = new();
 
         public ObservableCollection<ProductEntity> GetProducts()
         {
-            var query = dataContext
+            List<ProductEntity> selectedProducts = dataContext
                 .Products
-                .Select(product => product);
+                .Where(product => product.IsRemoved == false)
+                .Select(product => product)
+                .ToList();
 
-            ObservableCollection<ProductEntity> products = new();
-
-            foreach (ProductEntity product in query) { products.Add(product); }
+            ObservableCollection<ProductEntity> products = (selectedProducts == null) ? new() : new(selectedProducts);
 
             return products;
         }

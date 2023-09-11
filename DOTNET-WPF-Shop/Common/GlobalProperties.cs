@@ -14,7 +14,5 @@ namespace DOTNET_WPF_Shop.Common
         public int smallFontSize { get; } = 14;
         public string mainColor { get; } = "#DE493F";
         public string acceptColor { get; } = "#299F37";
-
-       
     }
 }

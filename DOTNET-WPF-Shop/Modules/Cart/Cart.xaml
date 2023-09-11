@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="10">
-            <common:NegativeButton Margin="0 0 10 0">Empty cart</common:NegativeButton>
+            <common:NegativeButton Width="100" Height="25" Margin="0 0 10 0" Click="EmptyCartButtonClick">Empty cart</common:NegativeButton>
             <common:CancelButton Click="BackButtonClick">Back</common:CancelButton>
         </StackPanel>
         <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Products}">
@@ -25,25 +25,27 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding Path=ImageSrc}" Height="50" Margin="0,0,10,0"/>
-                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
                             <TextBlock Text="{Binding Path=Title}" FontWeight="Bold"/>
                             <TextBlock Text="{Binding Path=Price, StringFormat='Цена: {0:C}'}"/>
                         </StackPanel>
-                        <!--<TextBlock Grid.Column="2" Text="{Binding Quantity}" Margin="10,0,10,0"/>-->
-                        <Button Grid.Column="3" Content="Убрать"/>
+                        <TextBlock Grid.Column="2" Text="Quantity:" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                        <DockPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <common:NegativeButton Content="Remove" Width="80" Height="25"  Margin="0 0 10 0" Tag="{Binding Path=Title}" Click="RemoveProductFromCartClick"/>
+                        </DockPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <TextBlock Text="{Binding TotalPrice, StringFormat='Итого: {0:C}'}" Margin="0,0,10,0"/>
-            <common:AcceptButton>Buy</common:AcceptButton>
+            <common:AcceptButton Width="100" Height="25">Buy</common:AcceptButton>
         </StackPanel>
     </Grid>
 </Window>

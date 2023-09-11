@@ -32,7 +32,7 @@ namespace DOTNET_WPF_Shop.DB
                 .HasForeignKey<CartEntity>(cart => cart.UserId);
 
             modelBuilder.Entity<CartProduct>()
-            .HasKey(cartProduct => new { cartProduct.CartId, cartProduct.ProductId });
+                .HasKey(cartProduct => new { cartProduct.CartId, cartProduct.ProductId });
 
             modelBuilder.Entity<CartProduct>()
                 .HasOne(cartProduct => cartProduct.Cart)
@@ -43,6 +43,14 @@ namespace DOTNET_WPF_Shop.DB
                 .HasOne(cartProduct => cartProduct.Product)
                 .WithMany(products => products.CartProducts)
                 .HasForeignKey(cartProduct => cartProduct.ProductId);
+
+            modelBuilder.Entity<UserEntity>()
+                .HasIndex(user => user.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<ProductEntity>()
+                .HasIndex(product => product.Title)
+                .IsUnique();
         }
     }
 }
