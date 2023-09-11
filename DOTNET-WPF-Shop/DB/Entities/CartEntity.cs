@@ -12,6 +12,6 @@ namespace DOTNET_WPF_Shop.DB.Entities
         public Guid UserId { get; set; }
 
         public UserEntity User { get; set; }
-        public List<ProductEntity> Products { get; set; }
+        public List<CartProduct> CartProducts { get; set; }
     }
 }

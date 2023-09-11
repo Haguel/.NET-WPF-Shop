@@ -33,15 +33,10 @@ namespace DOTNET_WPF_Shop.Modules.Main
             return products;
         }
 
-        public void PutProductToCart(String productTitle, Guid userId)
+        public void RedirectToCartPage(Main view, Cart.Cart cartView)
         {
-            ProductEntity product = productProvider.GetByTitle(productTitle);
-
-            if (product == null) throw new Exception($"There is no product with title {productTitle}");
-
-            UserEntity user = userProvider.GetById(userId);
-
-            cartProvider.PutProduct(product, user);
+            view.Hide();
+            cartView.Show();
         }
     }
 }

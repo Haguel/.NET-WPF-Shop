@@ -1,5 +1,6 @@
 ﻿using DOTNET_WPF_Shop.DB;
 using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.Auth;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -28,17 +29,17 @@ namespace DOTNET_WPF_Shop.Modules.Start
 
         private void SignupClick(object sender, RoutedEventArgs e)
         {
-            provider.RedirectToSignupPage(this);
+            provider.RedirectTo(this, new Signup());
         }
 
         private void SigninClick(object sender, RoutedEventArgs e)
         {
-            provider.RedirectToSigninPage(this);
+            provider.RedirectTo(this, new Signin());
         }
 
         private void ChangePasswordClick(object sender, RoutedEventArgs e)
         {
-            provider.RedirectToPasswordManagementPage(this);
+            provider.RedirectTo(this, new PasswordManagement());
         }
     }
 }

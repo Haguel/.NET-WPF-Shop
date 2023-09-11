@@ -33,11 +33,9 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         public void RedirectToMainPage(Window view, Guid userId)
         {
+            Main.Main mainView = new Main.Main(userId);
+            mainView.Show();
             view.Hide();
-
-            Main.Main main = new();
-            main.Tag = userId;
-            main.ShowDialog();
         }
 
         public void HidePage(Window view)

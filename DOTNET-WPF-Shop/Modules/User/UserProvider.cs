@@ -3,6 +3,7 @@ using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Auth.Dto;
 using DOTNET_WPF_Shop.Modules.Main;
 using DOTNET_WPF_Shop.Modules.User.Dto;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,9 +16,7 @@ namespace DOTNET_WPF_Shop.Modules.User
 {
     class UserProvider
     {
-        private DataContext dataContext;
-
-        public UserProvider() { dataContext = new(); }
+        private DataContext dataContext = new();
 
         public UserEntity GetByEmail(string email)
         {
@@ -32,6 +31,7 @@ namespace DOTNET_WPF_Shop.Modules.User
         {
             var user = dataContext
                 .Users
+                .Include(user => user.Cart)
                 .FirstOrDefault(u => u.Id == id);
 
             return user;
@@ -45,10 +45,13 @@ namespace DOTNET_WPF_Shop.Modules.User
                 Username = createUserDto.Username,
                 Email = createUserDto.Email,
                 PasswordHash = createUserDto.PasswordHash,
-                Cart = new CartEntity()
             };
 
+            CartEntity usersCart = new CartEntity();
+            newUser.Cart = usersCart;
+
             dataContext.Users.Add(newUser);
+            dataContext.Carts.Add(usersCart);
             dataContext.SaveChanges();
 
             return newUser;
