@@ -13,8 +13,7 @@ namespace DOTNET_WPF_Shop.DB.Entities
         public Double Price { get; set; }
         public String ImageSrc { get; set; }
         public Boolean? IsRemoved { get; set; } = null!;
-        public Guid? CartId { get; set; } = null!;
 
-        public CartEntity? Cart { get; set; }
+        public List<CartProduct> CartProducts { get; set; }
     }
 }

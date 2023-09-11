@@ -3,10 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DOTNET_WPF_Shop.Modules.Cart"
+        xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
+        Loaded="WindowLoaded"
         Title="Cart" Height="450" Width="800">
+    <Window.Resources>
+        <common:GlobalProperties x:Key="globalProperties" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <common:NegativeButton Margin="0 0 10 0">Empty cart</common:NegativeButton>
+            <common:CancelButton Click="BackButtonClick">Back</common:CancelButton>
+        </StackPanel>
+        <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Products}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Path=ImageSrc}" Height="50" Margin="0,0,10,0"/>
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <TextBlock Text="{Binding Path=Title}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Path=Price, StringFormat='Цена: {0:C}'}"/>
+                        </StackPanel>
+                        <!--<TextBlock Grid.Column="2" Text="{Binding Quantity}" Margin="10,0,10,0"/>-->
+                        <Button Grid.Column="3" Content="Убрать"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="{Binding TotalPrice, StringFormat='Итого: {0:C}'}" Margin="0,0,10,0"/>
+            <common:AcceptButton>Buy</common:AcceptButton>
+        </StackPanel>
     </Grid>
 </Window>

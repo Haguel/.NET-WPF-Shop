@@ -38,6 +38,21 @@ namespace DOTNET_WPF_Shop.Common
         }
     }
 
+    public class NegativeButton : Button
+    {
+        public NegativeButton()
+        {
+            ViewUtils viewUtils = new ViewUtils();
+
+            viewUtils.SetFontSize(this, ViewUtils.FontSizes.Default);
+
+            this.Background = new SolidColorBrush(Colors.IndianRed);
+            this.BorderBrush = new SolidColorBrush(Colors.IndianRed);
+            this.Foreground = new SolidColorBrush(Colors.White);
+            this.Padding = new System.Windows.Thickness(5, 0, 5, 0);
+        }
+    }
+
     public class HorizontalPanel : StackPanel
     {
         public HorizontalPanel()
