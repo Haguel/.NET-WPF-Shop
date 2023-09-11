@@ -41,6 +41,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
         public void HidePage(Window view)
         {
             view.Hide();
+            new Start.Start().Show();
         }
 
         public UserEntity Signup(SignupUserDto signupUserDto)

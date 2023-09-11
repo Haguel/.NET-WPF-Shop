@@ -1,4 +1,5 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.Product;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,9 +19,9 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 {
     public partial class Cart : Window
     {
-        private CartEntity cart;
         private Main.Main mainView;
-        private CartProvider cartProvider = new();
+        private CartProvider cartProvider;
+        private ProductProvider productProvider = new();
         public ObservableCollection<ProductEntity> Products { get; set; }
 
         public Cart(Guid userId, Main.Main mainView)
@@ -28,9 +29,9 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             InitializeComponent();
 
             this.mainView = mainView;
-            cart = cartProvider.GetFromUserId(userId);
+            cartProvider = new(userId);
 
-            List<ProductEntity> products = cartProvider.GetProductsFromCart(cart);
+            List<ProductEntity> products = cartProvider.GetProductsFromCart();
 
             Products = (products == null) ? new() : new(products);
 
@@ -45,9 +46,14 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
         public void PutProduct(ProductEntity product) 
         {
-            cartProvider.PutProduct(product, cart);
+            if (!cartProvider.IsProductInCart(product))
+            {
+                cartProvider.PutProduct(product);
 
-            Products.Add(product);
+                if (Products == null) Products = new();
+
+                Products.Add(product); 
+            }
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
@@ -55,5 +61,30 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             cartProvider.RedirectToMainPage(this, mainView);
         }
 
+        private void EmptyCartButtonClick(object sender, RoutedEventArgs e)
+        {
+            Products.Clear();
+
+            cartProvider.RemoveAllProductsFromCart();
+        }
+
+        private void RemoveProductFromCartClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button removeProductButton)
+            {
+                ProductEntity product = productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
+
+                for (int i = Products.Count - 1; i >= 0; i--)
+                {
+                    if (Products[i].Title == product.Title)
+                    {
+                        Products.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                cartProvider.RemoveProductFromCart(product);
+            }
+        }
     }
 }

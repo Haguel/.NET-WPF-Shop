@@ -12,7 +12,7 @@ namespace DOTNET_WPF_Shop.DB.Entities
         public String Title { get; set; }
         public Double Price { get; set; }
         public String ImageSrc { get; set; }
-        public Boolean? IsRemoved { get; set; } = null!;
+        public Boolean IsRemoved { get; set; }
 
         public List<CartProduct> CartProducts { get; set; }
     }

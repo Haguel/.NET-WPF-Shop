@@ -13,8 +13,11 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 {
     public class CartProvider
     {
+        private CartEntity cart;
         private DataContext dataContext = new();
         private UserProvider userProvider = new();
+
+        public CartProvider(Guid userId) { this.cart = GetFromUserId(userId); }
 
         public CartEntity GetFromUserId(Guid userId)
         {
@@ -23,7 +26,48 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             return user.Cart;
         }
 
-        public void PutProduct(ProductEntity product, CartEntity cart)
+        public void RemoveAllProductsFromCart()
+        {
+            List<CartProduct> cartProducts = dataContext.CartProducts
+                .Include(cartProduct => cartProduct.Cart)
+                .Where(cartProduct => cartProduct.CartId == cart.Id)
+                .Select(cartProduct => cartProduct)
+                .ToList();
+
+            foreach (CartProduct cartProduct in cartProducts)
+            {
+                dataContext.CartProducts.Remove(cartProduct);
+            }
+
+            dataContext.SaveChanges();
+        }
+
+        public void RemoveProductFromCart(ProductEntity product)
+        {
+            CartProduct cartProduct = dataContext.CartProducts
+                .Include(cartProduct => cartProduct.Product)
+                .Include(cartProduct => cartProduct.Cart)
+                .Where(cartProduct => cartProduct.CartId == cart.Id && cartProduct.ProductId == product.Id)
+                .Select(cartProduct => cartProduct)
+                .ToList()[0];
+
+            dataContext.CartProducts.Remove(cartProduct);
+            dataContext.SaveChanges();
+        }
+
+        public bool IsProductInCart(ProductEntity product)
+        {
+            List<ProductEntity> products = dataContext.CartProducts
+                .Include(cartProduct => cartProduct.Product)
+                .Include(cartProduct => cartProduct.Cart)
+                .Where(cartProduct => cartProduct.CartId == cart.Id && cartProduct.ProductId == product.Id)
+                .Select(cartProduct => cartProduct.Product)
+                .ToList();
+
+            return products.Count() == 1;
+        }
+
+        public void PutProduct(ProductEntity product)
         {
             CartProduct cartProduct = new()
             {
@@ -37,7 +81,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             dataContext.SaveChanges();
         }
 
-        public List<ProductEntity> GetProductsFromCart(CartEntity cart)
+        public List<ProductEntity> GetProductsFromCart()
         {
             List<ProductEntity> products = dataContext.CartProducts
                 .Include(cartProduct => cartProduct.Product)
