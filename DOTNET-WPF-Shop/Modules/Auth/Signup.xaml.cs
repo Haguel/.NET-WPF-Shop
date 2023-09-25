@@ -41,7 +41,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async void _AcceptButtonClick()
         {
             SignupUserDto signupUserDto = new()
             {
@@ -56,15 +56,54 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 if (isDataValid)
                 {
-                    UserEntity user = provider.Signup(signupUserDto);
+                    UserEntity user = await Task.Run(() => provider.Signup(signupUserDto));
 
-                    provider.RedirectToMainPage(this, user.Id);
+                    provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                DoneButton.IsEnabled = true;
+            }
+        }
+
+        private async void HandleOffDoneButton()
+        {
+            DoneButton.IsEnabled = false;
+            DoneButton.Content = "Loading";
+
+            while (!DoneButton.IsEnabled)
+            {
+                if (DoneButton.Content != "Loading...")
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        DoneButton.Content += ".";
+                    });
+
+                    await Task.Delay(400);
+                }
+                else
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        DoneButton.Content = "Loading";
+                    });
+                }
+            }
+        }
+
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        {
+            HandleOffDoneButton();
+            _AcceptButtonClick();
+
+            DoneButton.IsEnabled = true;
+            DoneButton.Content = "Done";
         }
     }
 }

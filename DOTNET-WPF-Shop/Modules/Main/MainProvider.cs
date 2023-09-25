@@ -3,6 +3,7 @@ using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Cart;
 using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Modules.User;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,18 +18,18 @@ namespace DOTNET_WPF_Shop.Modules.Main
     {
         DataContext dataContext = new();
 
-        public ObservableCollection<ProductEntity> GetProducts()
+        public async Task<ObservableCollection<ProductEntity>> GetProductsAsync()
         {
-            List<ProductEntity> selectedProducts = dataContext
+            List<ProductEntity> selectedProducts = await dataContext
                 .Products
                 .Where(product => product.IsRemoved == false)
-                .Select(product => product)
-                .ToList();
+                .ToListAsync();
 
             ObservableCollection<ProductEntity> products = (selectedProducts == null) ? new() : new(selectedProducts);
 
             return products;
         }
+
 
         public void RedirectToCartPage(Main view, Cart.Cart cartView)
         {

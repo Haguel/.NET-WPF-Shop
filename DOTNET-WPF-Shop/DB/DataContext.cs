@@ -15,7 +15,7 @@ namespace DOTNET_WPF_Shop.DB
         public DbSet<Entities.UserEntity> Users { get; set; }
         public DbSet<Entities.ProductEntity> Products { get; set; }
         public DbSet<Entities.CartEntity> Carts { get; set; }
-        public DbSet<Entities.CartProduct> CartProducts { get; set; }
+        public DbSet<Entities.CartProductEntity> CartProducts { get; set; }
 
         public DataContext() : base() { }
 
@@ -31,15 +31,15 @@ namespace DOTNET_WPF_Shop.DB
                 .WithOne(cart => cart.User)
                 .HasForeignKey<CartEntity>(cart => cart.UserId);
 
-            modelBuilder.Entity<CartProduct>()
+            modelBuilder.Entity<CartProductEntity>()
                 .HasKey(cartProduct => new { cartProduct.CartId, cartProduct.ProductId });
 
-            modelBuilder.Entity<CartProduct>()
+            modelBuilder.Entity<CartProductEntity>()
                 .HasOne(cartProduct => cartProduct.Cart)
                 .WithMany(cart => cart.CartProducts)
                 .HasForeignKey(cartProduct => cartProduct.CartId);
 
-            modelBuilder.Entity<CartProduct>()
+            modelBuilder.Entity<CartProductEntity>()
                 .HasOne(cartProduct => cartProduct.Product)
                 .WithMany(products => products.CartProducts)
                 .HasForeignKey(cartProduct => cartProduct.ProductId);

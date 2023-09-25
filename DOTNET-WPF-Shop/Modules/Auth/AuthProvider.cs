@@ -31,9 +31,9 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             if (textBox.Text == textBox.Tag as string) textBox.Text = "";
         }
 
-        public void RedirectToMainPage(Window view, Guid userId)
+        public void RedirectToMainPage(Window view, Guid userId, String username)
         {
-            Main.Main mainView = new Main.Main(userId);
+            Main.Main mainView = new Main.Main(userId, username);
             mainView.Show();
             view.Hide();
         }
@@ -44,7 +44,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             new Start.Start().Show();
         }
 
-        public UserEntity Signup(SignupUserDto signupUserDto)
+        public async Task<UserEntity> Signup(SignupUserDto signupUserDto)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(signupUserDto.Password);
 
@@ -55,16 +55,16 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                 PasswordHash = passwordHash
             };
 
-            UserEntity user = userProvider.GetByEmail(signupUserDto.Email);
+            UserEntity user = await userProvider.GetByEmail(signupUserDto.Email);
 
             if (user != null) throw new Exception("User already exists");
 
             return userProvider.Create(createUserDto);
         }
 
-        public UserEntity Signin(SigninUserDto signinUserDto) 
+        public async Task<UserEntity> Signin(SigninUserDto signinUserDto) 
         {
-            UserEntity user = userProvider.GetByEmail(signinUserDto.Email);
+            UserEntity user = await userProvider.GetByEmail(signinUserDto.Email);
 
             if (user == null) throw new Exception("User doesn't exist");
 
@@ -75,9 +75,9 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             return user;
         }
 
-        public void ChangePassword(ChangePassswordDto changePasswordDto)
+        public async void ChangePassword(ChangePassswordDto changePasswordDto)
         {
-            UserEntity user = userProvider.GetByEmail(changePasswordDto.Email);
+            UserEntity user = await userProvider.GetByEmail(changePasswordDto.Email);
 
             if (user == null) throw new Exception("User doesn't exist");
 

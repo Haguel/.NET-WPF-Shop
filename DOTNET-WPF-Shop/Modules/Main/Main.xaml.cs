@@ -23,15 +23,18 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private Cart.Cart cartView;
         private MainProvider provider = new();
         private ProductProvider productProvider = new();
+        public String username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
 
-        public Main(Guid userId)
+        public Main(Guid userId, string username)
         {
             InitializeComponent();
 
             cartView = new(userId, this);
-            Products = provider.GetProducts();
+            Products = new();
+
             this.DataContext = this;
+            this.username = username;
         }
 
         private void BuyButtonClick(object sender, RoutedEventArgs e)
@@ -47,10 +50,32 @@ namespace DOTNET_WPF_Shop.Modules.Main
                 }
             }
         }
-
+            
         private void CartButtonClick(object sender, RoutedEventArgs e)
         {
             provider.RedirectToCartPage(this, cartView);
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ObservableCollection<ProductEntity> products = await provider.GetProductsAsync();
+
+            LoadingText.Visibility = Visibility.Collapsed;
+
+            foreach (ProductEntity product in products)
+            {
+                Products.Add(product);
+            }
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
