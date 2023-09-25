@@ -14,6 +14,6 @@ namespace DOTNET_WPF_Shop.DB.Entities
         public String ImageSrc { get; set; }
         public Boolean IsRemoved { get; set; }
 
-        public List<CartProduct> CartProducts { get; set; }
+        public List<CartProductEntity> CartProducts { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             SigninUserDto signinUserDto = new()
             {
@@ -56,9 +56,9 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 if (isDataValid)
                 {
-                    UserEntity user = provider.Signin(signinUserDto);
+                    UserEntity user = await provider.Signin(signinUserDto);
 
-                    provider.RedirectToMainPage(this, user.Id);
+                    provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
             } 
             catch (Exception ex) 

@@ -41,7 +41,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             ChangePassswordDto changePasswordDto = new()
             {

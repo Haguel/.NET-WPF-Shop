@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DOTNET_WPF_Shop.Utils
 {
@@ -28,6 +29,16 @@ namespace DOTNET_WPF_Shop.Utils
             }
 
             return true;
+        }
+
+        public void HandleTextBoxUnfocus(TextBox textBox)
+        {
+            if (textBox.Text == "") textBox.Text = textBox.Tag as string;
+        }
+
+        public void HandleTextBoxFocus(TextBox textBox)
+        {
+            if (textBox.Text == textBox.Tag as string) textBox.Text = "";
         }
     }
 }

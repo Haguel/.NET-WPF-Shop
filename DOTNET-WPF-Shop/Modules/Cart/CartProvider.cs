@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
+using DOTNET_WPF_Shop.Modules.CartProduct;
 
 namespace DOTNET_WPF_Shop.Modules.Cart
 {
@@ -16,6 +17,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         private CartEntity cart;
         private DataContext dataContext = new();
         private UserProvider userProvider = new();
+        private CartProductProvider cartProductProvider = new();
 
         public CartProvider(Guid userId) { this.cart = GetFromUserId(userId); }
 
@@ -26,15 +28,13 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             return user.Cart;
         }
 
-        public void RemoveAllProductsFromCart()
-        {
-            List<CartProduct> cartProducts = dataContext.CartProducts
-                .Include(cartProduct => cartProduct.Cart)
-                .Where(cartProduct => cartProduct.CartId == cart.Id)
-                .Select(cartProduct => cartProduct)
-                .ToList();
+        public CartEntity GetCart() { return cart; }
 
-            foreach (CartProduct cartProduct in cartProducts)
+        public async void RemoveAllProductsFromCart()
+        {
+            List<CartProductEntity> cartProducts = await cartProductProvider.GetAllFromCart(cart);
+
+            foreach (CartProductEntity cartProduct in cartProducts)
             {
                 dataContext.CartProducts.Remove(cartProduct);
             }
@@ -42,43 +42,47 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             dataContext.SaveChanges();
         }
 
-        public void RemoveProductFromCart(ProductEntity product)
+        public async void RemoveProductFromCart(ProductEntity product)
         {
-            CartProduct cartProduct = dataContext.CartProducts
-                .Include(cartProduct => cartProduct.Product)
-                .Include(cartProduct => cartProduct.Cart)
-                .Where(cartProduct => cartProduct.CartId == cart.Id && cartProduct.ProductId == product.Id)
-                .Select(cartProduct => cartProduct)
-                .ToList()[0];
+            CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
             dataContext.CartProducts.Remove(cartProduct);
             dataContext.SaveChanges();
         }
 
-        public bool IsProductInCart(ProductEntity product)
+        public async Task<bool> IsProductInCart(ProductEntity product)
         {
-            List<ProductEntity> products = dataContext.CartProducts
-                .Include(cartProduct => cartProduct.Product)
-                .Include(cartProduct => cartProduct.Cart)
-                .Where(cartProduct => cartProduct.CartId == cart.Id && cartProduct.ProductId == product.Id)
-                .Select(cartProduct => cartProduct.Product)
-                .ToList();
+            CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-            return products.Count() == 1;
+            return cartProduct != null;
         }
 
-        public void PutProduct(ProductEntity product)
+        public async void UpdateProductQuantity(ProductEntity product, int modifier)
         {
-            CartProduct cartProduct = new()
-            {
-                Product = product,
-                Cart = cart
-            };
+            CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-            dataContext.Products.Attach(product);
-            dataContext.Carts.Attach(cart);
-            dataContext.CartProducts.Add(cartProduct);
-            dataContext.SaveChanges();
+            cartProduct.Quantity += modifier;
+
+            await dataContext.SaveChangesAsync();
+        }
+
+        public async void UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
+        {
+            cartProduct.Quantity += modifier;
+
+            await dataContext.SaveChangesAsync();
+        }
+
+        public async Task<CartProductEntity> PutProduct(ProductEntity product)
+        {
+            return await cartProductProvider.Create(product, cart);
+        }
+
+        public async Task<List<CartProductEntity>> GetCartProducts()
+        {
+            List<CartProductEntity> cartProducts = await cartProductProvider.GetAllFromCart(cart);
+
+            return cartProducts;
         }
 
         public List<ProductEntity> GetProductsFromCart()

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Title="Main" Height="450" Width="800">
     <Window.Resources>
         <common:GlobalProperties x:Key="globalProperties" />
@@ -20,11 +21,15 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <common:HorizontalPanel Grid.Column="0">
                 <Image Source="/Static/Logo.png" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Stretch="UniformToFill"/>
-            </Grid>
-            <common:HorizontalPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <TextBlock VerticalAlignment="Center" Margin="15 0 0 0"
+                           FontSize="{Binding Source={StaticResource globalProperties}, Path=smallFontSize}"
+                           Text="{Binding username}"></TextBlock>
+            </common:HorizontalPanel>
+                <common:HorizontalPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <TextBox Width="180" Height="25" Background="#EAEAEA" BorderBrush="#D3D3D3" Foreground="#757575" 
+                         GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Tag="Search"
                          FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}">
                     Search
                 </TextBox>
@@ -57,5 +62,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <TextBlock Grid.Row="2" x:Name="LoadingText" Text="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible"/>
     </Grid>
 </Window>
