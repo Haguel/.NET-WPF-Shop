@@ -43,7 +43,7 @@
             <TextBlock Foreground="#757575" FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}"
                        VerticalAlignment="Center">Sort by:</TextBlock>
         </common:HorizontalPanel>
-        <ListView ItemsSource="{Binding Products}" Grid.Row="2">
+        <ListView ItemsSource="{Binding Products}" Grid.Row="2" x:Name="itemsListView">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="3" />

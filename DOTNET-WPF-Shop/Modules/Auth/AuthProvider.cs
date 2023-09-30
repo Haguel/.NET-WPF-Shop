@@ -21,26 +21,16 @@ namespace DOTNET_WPF_Shop.Modules.Auth
     {
         private UserProvider userProvider = new();
 
-        public void HandleTextBoxUnfocus(TextBox textBox)
-        {
-            if (textBox.Text == "") textBox.Text = textBox.Tag as string;
-        }
-
-        public void HandleTextBoxFocus(TextBox textBox)
-        {
-            if (textBox.Text == textBox.Tag as string) textBox.Text = "";
-        }
-
         public void RedirectToMainPage(Window view, Guid userId, String username)
         {
             Main.Main mainView = new Main.Main(userId, username);
             mainView.Show();
-            view.Hide();
+            view.Close();
         }
 
         public void HidePage(Window view)
         {
-            view.Hide();
+            view.Close();
             new Start.Start().Show();
         }
 

@@ -29,6 +29,7 @@ namespace DOTNET_WPF_Shop.Modules.CartProduct
         {
             List<CartProductEntity> cartProducts = await dataContext.CartProducts
                 .Include(cartProduct => cartProduct.Cart)
+                .Include(cartProduct => cartProduct.Product)
                 .Where(cartProduct => cartProduct.CartId == cart.Id)
                 .Select(cartProduct => cartProduct)
                 .ToListAsync();

@@ -22,9 +22,7 @@
         <authCommon:AuthTextBox x:Name="emailField" Grid.Row="1" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
         <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="2" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
         <common:HorizontalCenteredPanel Grid.Row="3">
-            <authCommon:AuthDoneButton Click="AcceptButtonClick">
-                Done
-            </authCommon:AuthDoneButton>
+            <authCommon:AuthDoneButton Click="AcceptButtonClick" Content="Done" x:Name="DoneButton" />
             <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="BackButtonClick">Back</common:CancelButton>
         </common:HorizontalCenteredPanel>
     </Grid>

@@ -1,6 +1,7 @@
 ﻿using DOTNET_WPF_Shop.DB;
 using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Product;
+using DOTNET_WPF_Shop.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +24,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private Cart.Cart cartView;
         private MainProvider provider = new();
         private ProductProvider productProvider = new();
+        private ProviderUtils providerUtils = new();
+
         public String username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
 
@@ -70,12 +73,22 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
+            providerUtils.HandleTextBoxFocus(sender as TextBox);
+
+            string title = "Mango"; 
+            var product = Products.FirstOrDefault(p => p.Title == title);
+            if (product != null)
+            {
+                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
+                lvi.Visibility = Visibility.Collapsed;
+            }
+
 
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-
+            providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
     }
 }

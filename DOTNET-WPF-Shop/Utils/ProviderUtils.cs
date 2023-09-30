@@ -14,7 +14,7 @@ namespace DOTNET_WPF_Shop.Utils
         public bool ValidateDto(object obj)
         {
             var validationContext = new ValidationContext(obj, null, null);
-            var validationResults = new List<ValidationResult>();
+            var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
 
             bool isValid = Validator.TryValidateObject(obj, validationContext, validationResults, true);
 

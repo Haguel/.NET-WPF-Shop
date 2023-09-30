@@ -12,7 +12,7 @@ namespace DOTNET_WPF_Shop.Modules.Start
     {
         public void RedirectTo(Start view, Window anotherView)
         {
-            view.Hide();
+            view.Close();
             anotherView.ShowDialog();
         }
     }

@@ -35,6 +35,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             this.mainView = mainView;
             cartProvider = new(userId);
 
+            CartProducts = new();
+
             this.DataContext = this;
         }
 
@@ -43,7 +45,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             cart = cartProvider.GetCart();
             List<CartProductEntity> cartProducts = await cartProvider.GetCartProducts();
 
-            CartProducts = (cartProducts == null) ? new() : new(cartProducts);
+            foreach (CartProductEntity cartproduct in cartProducts)
+            {
+                CartProducts.Add(cartproduct);
+            }
         }
 
         private int GetIndexOfCartProduct(CartProductEntity cartProduct)
@@ -72,16 +77,17 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 if (CartProducts == null) CartProducts = new();
 
                 CartProducts.Add(cartProduct);
-
-                MessageBox.Show(CartProducts[CartProducts.Count - 1].Product.Title);
             }
             else
             {
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-                CartProducts[GetIndexOfCartProduct(cartProduct)].Quantity++;
+                int deleteIndex = GetIndexOfCartProduct(cartProduct);
+                CartProducts.RemoveAt(deleteIndex);
 
-                cartProvider.UpdateProductQuantity(cartProduct, 1);
+                CartProductEntity updatedCartproduct = await cartProvider.UpdateProductQuantity(cartProduct, 1);
+
+                CartProducts.Insert(deleteIndex, updatedCartproduct);
             }
         }
 

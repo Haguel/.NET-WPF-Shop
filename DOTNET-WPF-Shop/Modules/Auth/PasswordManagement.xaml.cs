@@ -19,7 +19,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 {
     public partial class PasswordManagement : Window
     {
-        AuthProvider provider = new AuthProvider();
+        private AuthProvider provider = new AuthProvider();
+        private ProviderUtils providerUtils = new();
 
         public PasswordManagement()
         {
@@ -28,12 +29,12 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         private void TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            provider.HandleTextBoxUnfocus(sender as TextBox);
+            providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
 
         private void TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            provider.HandleTextBoxFocus(sender as TextBox);
+            providerUtils.HandleTextBoxFocus(sender as TextBox);
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
