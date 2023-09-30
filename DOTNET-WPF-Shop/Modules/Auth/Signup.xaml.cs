@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,21 +20,23 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 {
     public partial class Signup : Window
     {
-        AuthProvider provider = new AuthProvider();
+        private AuthProvider provider = new AuthProvider();
+        private ProviderUtils providerUtils = new ProviderUtils();
+        private CancellationTokenSource cancelTokenSource;
 
         public Signup()
         {
             InitializeComponent();
         }
 
-        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
-        {
-            provider.HandleTextBoxUnfocus(sender as TextBox);
-        }
-
         private void TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            provider.HandleTextBoxFocus(sender as TextBox);
+            providerUtils.HandleTextBoxFocus(sender as TextBox);
+        }
+
+        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e) 
@@ -41,7 +44,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private async void _AcceptButtonClick()
+        private async Task _AcceptButtonClick()
         {
             SignupUserDto signupUserDto = new()
             {
@@ -56,51 +59,60 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 if (isDataValid)
                 {
-                    UserEntity user = await Task.Run(() => provider.Signup(signupUserDto));
+                    UserEntity user = await Task.Run(() => 
+                    {
+                        return provider.Signup(signupUserDto); 
+                    });
+
+                    cancelTokenSource.Cancel();
 
                     provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
             }
             catch (Exception ex)
             {
+                cancelTokenSource.Cancel();
+
                 MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                DoneButton.IsEnabled = true;
             }
         }
 
-        private async void HandleOffDoneButton()
+        private async Task HandleOffDoneButton()
         {
             DoneButton.IsEnabled = false;
-            DoneButton.Content = "Loading";
+            string[] loadingWheel = { "Loading", "Loading.", "Loading..", "Loading..." };
+
+            CancellationToken cancelToken = cancelTokenSource.Token;
 
             while (!DoneButton.IsEnabled)
             {
-                if (DoneButton.Content != "Loading...")
+                for (int i = 0; i < loadingWheel.Length; i++)
                 {
-                    Dispatcher.Invoke(() =>
+                    if (cancelToken.IsCancellationRequested)
                     {
-                        DoneButton.Content += ".";
-                    });
+                        Dispatcher.Invoke(() => {
+                            DoneButton.Content = "Done";
+                            DoneButton.IsEnabled = true;
+                        });
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() => {
+                            DoneButton.Content = loadingWheel[i];
+                        });
+                    }
 
-                    await Task.Delay(400);
-                }
-                else
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        DoneButton.Content = "Loading";
-                    });
+                    await Task.Delay(500);
                 }
             }
         }
 
         private async void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
-            HandleOffDoneButton();
-            _AcceptButtonClick();
+            await Task.WhenAll(
+                HandleOffDoneButton(),
+                _AcceptButtonClick()
+            );
 
             DoneButton.IsEnabled = true;
             DoneButton.Content = "Done";

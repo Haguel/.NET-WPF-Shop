@@ -66,11 +66,13 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             await dataContext.SaveChangesAsync();
         }
 
-        public async void UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
+        public async Task<CartProductEntity> UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
         {
             cartProduct.Quantity += modifier;
 
             await dataContext.SaveChangesAsync();
+
+            return cartProduct;
         }
 
         public async Task<CartProductEntity> PutProduct(ProductEntity product)

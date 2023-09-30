@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,21 +21,23 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 {
     public partial class Signin : Window
     {
-        AuthProvider provider = new AuthProvider();
+        private AuthProvider provider = new AuthProvider();
+        private ProviderUtils providerUtils = new ProviderUtils();
+        private CancellationTokenSource cancelTokenSource;
 
         public Signin()
         {
             InitializeComponent();
         }
 
-        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
-        {
-            provider.HandleTextBoxUnfocus(sender as TextBox);
-        }
-
         private void TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            provider.HandleTextBoxFocus(sender as TextBox);
+            providerUtils.HandleTextBoxFocus(sender as TextBox);
+        }
+
+        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
@@ -42,7 +45,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async Task _AcceptButtonClick()
         {
             SigninUserDto signinUserDto = new()
             {
@@ -56,15 +59,60 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 if (isDataValid)
                 {
-                    UserEntity user = await provider.Signin(signinUserDto);
+                    UserEntity user = await Task.Run(() =>
+                    {
+                        return provider.Signin(signinUserDto);
+                    });
 
                     provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
-            } 
-            catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
+                cancelTokenSource.Cancel();
+
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async Task HandleOffDoneButton()
+        {
+            DoneButton.IsEnabled = false;
+            string[] loadingWheel = { "Loading", "Loading.", "Loading..", "Loading..." };
+
+            CancellationToken cancelToken = cancelTokenSource.Token;
+
+            while (!DoneButton.IsEnabled)
+            {
+                for (int i = 0; i < loadingWheel.Length; i++)
+                {
+                    if (cancelToken.IsCancellationRequested)
+                    {
+                        Dispatcher.Invoke(() => {
+                            DoneButton.Content = "Done";
+                            DoneButton.IsEnabled = true;
+                        });
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() => {
+                            DoneButton.Content = loadingWheel[i];
+                        });
+                    }
+
+                    await Task.Delay(500);
+                }
+            }
+        }
+
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        {
+            cancelTokenSource = new();
+
+            await Task.WhenAll(
+                //HandleOffDoneButton(),
+                _AcceptButtonClick()
+            ); 
         }
     }
 }

@@ -34,7 +34,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
         public void RedirectToCartPage(Main view, Cart.Cart cartView)
         {
             view.Hide();
-            cartView.Show();
+            cartView.ShowDialog();
+            view.Show();
         }
     }
 }
