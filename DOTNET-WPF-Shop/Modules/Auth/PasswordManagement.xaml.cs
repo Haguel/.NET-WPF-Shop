@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
     {
         private AuthProvider provider = new AuthProvider();
         private ProviderUtils providerUtils = new();
+        private CancellationTokenSource cancelTokenSource;
 
         public PasswordManagement()
         {
@@ -42,7 +44,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             provider.HidePage(this);
         }
 
-        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async Task _AcceptButtonClick()
         {
             ChangePassswordDto changePasswordDto = new()
             {
@@ -55,14 +57,31 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
             try
             {
-                if (isDataValid) provider.ChangePassword(changePasswordDto);
+                if (isDataValid)
+                {
+                   await Task.Run(() => provider.ChangePassword(changePasswordDto));
+                }
 
-                this.Close();
+                cancelTokenSource.Cancel();
+
+                provider.HidePage(this);
             }
             catch (Exception ex)
             {
+                cancelTokenSource.Cancel();
+
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        {
+            cancelTokenSource = new();
+
+            await Task.WhenAll(
+                provider.HandleOffDoneButton(DoneButton, cancelTokenSource.Token),
+                _AcceptButtonClick()
+            );
         }
     }
 }

@@ -64,6 +64,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                         return provider.Signin(signinUserDto);
                     });
 
+                    cancelTokenSource.Cancel();
+
                     provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
             }
@@ -75,44 +77,14 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             }
         }
 
-        private async Task HandleOffDoneButton()
-        {
-            DoneButton.IsEnabled = false;
-            string[] loadingWheel = { "Loading", "Loading.", "Loading..", "Loading..." };
-
-            CancellationToken cancelToken = cancelTokenSource.Token;
-
-            while (!DoneButton.IsEnabled)
-            {
-                for (int i = 0; i < loadingWheel.Length; i++)
-                {
-                    if (cancelToken.IsCancellationRequested)
-                    {
-                        Dispatcher.Invoke(() => {
-                            DoneButton.Content = "Done";
-                            DoneButton.IsEnabled = true;
-                        });
-                    }
-                    else
-                    {
-                        Dispatcher.Invoke(() => {
-                            DoneButton.Content = loadingWheel[i];
-                        });
-                    }
-
-                    await Task.Delay(500);
-                }
-            }
-        }
-
         private async void AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             cancelTokenSource = new();
 
             await Task.WhenAll(
-                //HandleOffDoneButton(),
+                provider.HandleOffDoneButton(DoneButton, cancelTokenSource.Token),
                 _AcceptButtonClick()
-            ); 
+            );
         }
     }
 }
