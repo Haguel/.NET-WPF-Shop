@@ -11,9 +11,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {
@@ -30,8 +32,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         public void HidePage(Window view)
         {
-            view.Close();
             new Start.Start().Show();
+            view.Close();
         }
 
         public async Task<UserEntity> Signup(SignupUserDto signupUserDto)
@@ -86,6 +88,30 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             };
 
             userProvider.Update(updateUserDto);
+        }
+
+        public async Task HandleOffDoneButton(Button DoneButton, CancellationToken cancelToken)
+        {
+            DoneButton.IsEnabled = false;
+            string[] loadingWheel = { "Loading", "Loading.", "Loading..", "Loading..." };
+
+            while (!DoneButton.IsEnabled)
+            {
+                for (int i = 0; i < loadingWheel.Length; i++)
+                {
+                    if (cancelToken.IsCancellationRequested)
+                    {
+                        DoneButton.Content = "Done";
+                        DoneButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        DoneButton.Content = loadingWheel[i];
+                    }
+
+                    await Task.Delay(500);
+                }
+            }
         }
     }
 }
