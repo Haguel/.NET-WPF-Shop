@@ -28,6 +28,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private ProviderUtils providerUtils = new();
         private CancellationTokenSource cancelTokenSource;
 
+        public int CountOfProducts { get; set; }
         public String username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
 
@@ -37,6 +38,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
             cartView = new(userId, this);
             Products = new();
+            CountOfProducts = 0;
 
             this.DataContext = this;
             this.username = username;
@@ -79,6 +81,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            await cartView.LoadCartProducts();
+
             ObservableCollection<ProductEntity> products = await provider.GetProductsAsync();
 
             LoadingText.Visibility = Visibility.Collapsed;

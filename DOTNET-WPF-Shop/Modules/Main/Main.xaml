@@ -42,6 +42,10 @@
                         Click="CartButtonClick">
                     <Image Source="/Static/Cart.png" HorizontalAlignment="Center"  Width="28" Height="28" Stretch="UniformToFill" />
                 </Button>
+                <TextBlock Margin="-5 0" 
+                           Text="{Binding CountOfProducts}"
+                           Foreground="{Binding Source={StaticResource globalProperties}, Path=mainColor}"
+                           FontSize="{Binding Source={StaticResource globalProperties}, Path=smallFontSize}"/>
             </common:HorizontalPanel>
         </Grid>
         <common:HorizontalPanel Grid.Row="1" HorizontalAlignment="Left" Margin="10 0 10 0">
