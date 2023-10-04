@@ -1,6 +1,7 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.CartProduct;
 using DOTNET_WPF_Shop.Modules.Product;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,10 +23,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
     {
         private Main.Main mainView;
         private CartProvider cartProvider;
+        private CartEntity cart;
         private CartProductProvider cartProductProvider = new();
         private ProductProvider productProvider = new();
-        private CartEntity cart;
-
+        
         public ObservableCollection<CartProductEntity> CartProducts { get; set; }
 
         public Cart(Guid userId, Main.Main mainView)
@@ -34,21 +35,26 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
             this.mainView = mainView;
             cartProvider = new(userId);
-
             CartProducts = new();
 
             this.DataContext = this;
         }
 
-        private async Task LoadCartProducts()
+        public async Task LoadCartProducts()
         {
+            int tempProductsCounter = 0;
             cart = cartProvider.GetCart();
+
             List<CartProductEntity> cartProducts = await cartProvider.GetCartProducts();
 
             foreach (CartProductEntity cartproduct in cartProducts)
             {
+                tempProductsCounter += 1 * cartproduct.Quantity;
+
                 CartProducts.Add(cartproduct);
             }
+
+            mainView.CountOfProducts = tempProductsCounter;
         }
 
         private int GetIndexOfCartProduct(CartProductEntity cartProduct)
@@ -66,15 +72,11 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
         public async void PutProduct(ProductEntity product) 
         {
-            if (CartProducts == null) await LoadCartProducts();
-
             bool isProductInCart = await cartProvider.IsProductInCart(product);
 
             if (!isProductInCart)
             {
                 CartProductEntity cartProduct = await cartProvider.PutProduct(product);
-
-                if (CartProducts == null) CartProducts = new();
 
                 CartProducts.Add(cartProduct);
             }
@@ -89,6 +91,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
                 CartProducts.Insert(deleteIndex, updatedCartproduct);
             }
+
+            mainView.CountOfProducts++;
         }
 
         private void BackButtonClick(object sender, RoutedEventArgs e)
@@ -101,6 +105,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             CartProducts.Clear();
 
             cartProvider.RemoveAllProductsFromCart();
+
+            mainView.CountOfProducts = 0;
         }
 
         private async void RemoveProductFromCartClick(object sender, RoutedEventArgs e)
@@ -120,6 +126,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 }
 
                 cartProvider.RemoveProductFromCart(product);
+
+                mainView.CountOfProducts--;
             }
         }
 
