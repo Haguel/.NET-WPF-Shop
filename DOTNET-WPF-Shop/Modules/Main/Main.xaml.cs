@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private MainProvider provider = new();
         private ProductProvider productProvider = new();
         private ProviderUtils providerUtils = new();
+        private CancellationTokenSource cancelTokenSource;
 
         public String username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
@@ -40,6 +42,16 @@ namespace DOTNET_WPF_Shop.Modules.Main
             this.username = username;
         }
 
+        private async void NotifyAboutBuying(string pruductTitle)
+        {
+            CancellationToken cancelToken = cancelTokenSource.Token;
+            NotificationTextBlock.Text = $"{pruductTitle} is added to the cart";
+
+            await Task.Delay(2000);
+
+            if (!cancelToken.IsCancellationRequested) NotificationTextBlock.Text = string.Empty;
+        }
+
         private void BuyButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button buyButton)
@@ -49,6 +61,12 @@ namespace DOTNET_WPF_Shop.Modules.Main
                     if (productStackPanel.Children[1] is TextBlock productTitle)
                     {
                         cartView.PutProduct(productProvider.GetByTitle(productTitle.Text));
+
+                        if (cancelTokenSource != null) cancelTokenSource.Cancel();
+
+                        cancelTokenSource = new();
+
+                        NotifyAboutBuying(productTitle.Text);
                     }
                 }
             }
@@ -73,22 +91,48 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            providerUtils.HandleTextBoxFocus(sender as TextBox);
-
-            string title = "Mango"; 
-            var product = Products.FirstOrDefault(p => p.Title == title);
-            if (product != null)
-            {
-                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
-                lvi.Visibility = Visibility.Collapsed;
-            }
-
-
+            providerUtils.HandleTextBoxFocus(SearchBar);
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            providerUtils.HandleTextBoxUnfocus(sender as TextBox);
+            providerUtils.HandleTextBoxUnfocus(SearchBar);
         }
-    }
+
+        private void MakeAllProductsVisible()
+        {
+            foreach (var item in itemsListView.Items)
+            {
+                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
+
+                if (lvi != null) lvi.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HideProductsThatDontHaveSubTitle(string subTitle)
+        {
+            var products = Products.Where(p => !p.Title.ToLower().Contains(subTitle.ToLower()));
+
+            foreach (var product in products)
+            {
+                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
+
+                if (lvi != null) lvi.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // this if statement is only intended for properly event working during the initialization
+            if (Products == null || SearchBar == null || itemsListView == null) return;
+
+            MakeAllProductsVisible();
+
+            if (SearchBar.Text != SearchBar.Tag)
+            {
+                HideProductsThatDontHaveSubTitle(SearchBar.Text);
+            }
+        }
+
+    }   
 }
