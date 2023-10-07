@@ -5,6 +5,9 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,43 +22,81 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Cart
 {
-    public partial class Cart : Window
+    public partial class Cart : Window, INotifyPropertyChanged
     {
         private Main.Main mainView;
-        private CartProvider cartProvider;
+        private CartProvider provider;
         private CartEntity cart;
         private CartProductProvider cartProductProvider = new();
         private ProductProvider productProvider = new();
         
         public ObservableCollection<CartProductEntity> CartProducts { get; set; }
+        private double _totalPrice;
+        public double TotalPrice
+        {
+            get { return _totalPrice; }
+            set
+            {
+                if (_totalPrice != value)
+                {
+                    _totalPrice = value;
+                    OnPropertyChanged("TotalPrice");
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Cart(Guid userId, Main.Main mainView)
         {
             InitializeComponent();
 
             this.mainView = mainView;
-            cartProvider = new(userId);
+            provider = new(userId);
             CartProducts = new();
+            TotalPrice = 0;
 
             this.DataContext = this;
         }
 
         public async Task LoadCartProducts()
         {
-            int tempProductsCounter = 0;
-            cart = cartProvider.GetCart();
+            int productsCounter = 0;
+            cart = provider.GetCart();
 
-            List<CartProductEntity> cartProducts = await cartProvider.GetCartProducts();
+            List<CartProductEntity> cartProducts = await provider.GetCartProducts();
 
             foreach (CartProductEntity cartproduct in cartProducts)
             {
-                tempProductsCounter += 1 * cartproduct.Quantity;
+                productsCounter += 1 * cartproduct.Quantity;
+                TotalPrice += cartproduct.Quantity * cartproduct.Product.Price;
 
                 CartProducts.Add(cartproduct);
             }
 
-            mainView.CountOfProducts = tempProductsCounter;
+            mainView.ChangeCountOfProductProp(productsCounter);
         }
+
+        public async void PutProduct(ProductEntity product) 
+        {
+            bool isProductInCart = await provider.IsProductInCart(product);
+
+            if (!isProductInCart)
+            {
+                CartProductEntity cartProduct = await provider.PutProduct(product);
+
+                CartProducts.Add(cartProduct);
+            }
+            else
+            {
+                await UpdateProductQuantity(product, 1);
+            }
+
+            mainView.ChangeCountOfProductProp(1); 
+        }
+
+        public void ChangeTotalPriceProp(int modifier, double price) { TotalPrice += modifier * price; }
+        public void ZeroTotalPriceProp() { TotalPrice = 0; }
 
         private int GetIndexOfCartProduct(CartProductEntity cartProduct)
         {
@@ -70,51 +111,35 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             return -1;
         }
 
-        public async void PutProduct(ProductEntity product) 
+        private async Task UpdateProductQuantity(ProductEntity product, int modifier)
         {
-            bool isProductInCart = await cartProvider.IsProductInCart(product);
+            CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-            if (!isProductInCart)
+            int deleteIndex = GetIndexOfCartProduct(cartProduct);
+            CartProducts.RemoveAt(deleteIndex);
+
+            if (cartProduct.Quantity == 1 && modifier < 0)
             {
-                CartProductEntity cartProduct = await cartProvider.PutProduct(product);
-
-                CartProducts.Add(cartProduct);
+                provider.RemoveProductFromCart(product);
             }
             else
             {
-                CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
-
-                int deleteIndex = GetIndexOfCartProduct(cartProduct);
-                CartProducts.RemoveAt(deleteIndex);
-
-                CartProductEntity updatedCartproduct = await cartProvider.UpdateProductQuantity(cartProduct, 1);
+                CartProductEntity updatedCartproduct = provider.UpdateProductQuantity(cartProduct, modifier);
 
                 CartProducts.Insert(deleteIndex, updatedCartproduct);
             }
 
-            mainView.CountOfProducts++;
-        }
-
-        private void BackButtonClick(object sender, RoutedEventArgs e)
-        {
-            cartProvider.RedirectToMainPage(this, mainView);
-        }
-
-        private void EmptyCartButtonClick(object sender, RoutedEventArgs e)
-        {
-            CartProducts.Clear();
-
-            cartProvider.RemoveAllProductsFromCart();
-
-            mainView.CountOfProducts = 0;
         }
 
         private async void RemoveProductFromCartClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button removeProductButton)
             {
+
                 ProductEntity product = productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
+
+                ChangeTotalPriceProp(-1, product.Price);
 
                 for (int i = CartProducts.Count - 1; i >= 0; i--)
                 {
@@ -125,15 +150,50 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                     }
                 }
 
-                cartProvider.RemoveProductFromCart(product);
-
-                mainView.CountOfProducts--;
+                provider.RemoveProductFromCart(product);
+                mainView.ChangeCountOfProductProp(-1);
             }
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void PlusQuantity_Click(object sender, RoutedEventArgs e)
         {
-            await LoadCartProducts();
+            Button button = sender as Button;
+            ProductEntity product = button.Tag as ProductEntity;
+
+            ChangeTotalPriceProp(1, product.Price);
+            await UpdateProductQuantity(product, 1);
+
+            mainView.ChangeCountOfProductProp(1);
+        }
+
+        private async void MinusQuantity_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            ProductEntity product = button.Tag as ProductEntity;
+
+            ChangeTotalPriceProp(-1, product.Price);
+            await UpdateProductQuantity(product, -1);
+
+            mainView.ChangeCountOfProductProp(-1);
+        }
+
+        private void BackButtonClick(object sender, RoutedEventArgs e)
+        {
+            provider.RedirectToMainPage(this, mainView);
+        }
+
+        private void EmptyCartButtonClick(object sender, RoutedEventArgs e)
+        {
+            CartProducts.Clear();
+            provider.RemoveAllProductsFromCart();
+
+            ZeroTotalPriceProp();
+            mainView.ZeroCountOfProductProp();
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

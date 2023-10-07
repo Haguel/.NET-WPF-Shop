@@ -5,6 +5,8 @@ using DOTNET_WPF_Shop.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -20,7 +22,7 @@ using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Main
 {
-    public partial class Main : Window
+    public partial class Main : Window, INotifyPropertyChanged
     {
         private Cart.Cart cartView;
         private MainProvider provider = new();
@@ -28,9 +30,23 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private ProviderUtils providerUtils = new();
         private CancellationTokenSource cancelTokenSource;
 
-        public int CountOfProducts { get; set; }
-        public String username { get; set; }
+        public String Username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
+        private int _countOfProducts;
+        public int CountOfProducts
+        {
+            get { return _countOfProducts; }
+            set
+            {
+                if (_countOfProducts != value)
+                {
+                    _countOfProducts = value;
+                    OnPropertyChanged("CountOfProducts");
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Main(Guid userId, string username)
         {
@@ -41,8 +57,11 @@ namespace DOTNET_WPF_Shop.Modules.Main
             CountOfProducts = 0;
 
             this.DataContext = this;
-            this.username = username;
+            Username = username;
         }
+
+        public void ChangeCountOfProductProp(int modifier) { CountOfProducts += modifier;  }
+        public void ZeroCountOfProductProp() { CountOfProducts = 0; }
 
         private async void NotifyAboutBuying(string pruductTitle)
         {
@@ -73,35 +92,6 @@ namespace DOTNET_WPF_Shop.Modules.Main
                 }
             }
         }
-            
-        private void CartButtonClick(object sender, RoutedEventArgs e)
-        {
-            provider.RedirectToCartPage(this, cartView);
-        }
-
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            await cartView.LoadCartProducts();
-
-            ObservableCollection<ProductEntity> products = await provider.GetProductsAsync();
-
-            LoadingText.Visibility = Visibility.Collapsed;
-
-            foreach (ProductEntity product in products)
-            {
-                Products.Add(product);
-            }
-        }
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            providerUtils.HandleTextBoxFocus(SearchBar);
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            providerUtils.HandleTextBoxUnfocus(SearchBar);
-        }
 
         private void MakeAllProductsVisible()
         {
@@ -125,6 +115,11 @@ namespace DOTNET_WPF_Shop.Modules.Main
             }
         }
 
+        private void CartButtonClick(object sender, RoutedEventArgs e)
+        {
+            provider.RedirectToCartPage(this, cartView);
+        }
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             // this if statement is only intended for properly event working during the initialization
@@ -138,5 +133,33 @@ namespace DOTNET_WPF_Shop.Modules.Main
             }
         }
 
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            providerUtils.HandleTextBoxFocus(SearchBar);
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            providerUtils.HandleTextBoxUnfocus(SearchBar);
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await cartView.LoadCartProducts();
+
+            ObservableCollection<ProductEntity> products = await provider.GetProductsAsync();
+
+            LoadingText.Visibility = Visibility.Collapsed;
+
+            foreach (ProductEntity product in products)
+            {
+                Products.Add(product);
+            }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }   
 }

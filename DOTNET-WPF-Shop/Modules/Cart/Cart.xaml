@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
         Title="Cart" Height="450" Width="800">
     <Window.Resources>
         <common:GlobalProperties x:Key="globalProperties" />
@@ -27,9 +27,14 @@
                         <Image Source="{Binding Path=Product.ImageSrc}" Height="50" Width="80" Margin="0,0,10,0"/>
                         <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Width="100">
                             <TextBlock Text="{Binding Path=Product.Title}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Path=Product.Price, StringFormat='Цена: {0:C}'}"/>
+                            <TextBlock Text="{c:Binding Product.Price * Quantity, StringFormat='Price: {0:n2}'}"/>
                         </StackPanel>
-                        <TextBlock Grid.Column="2" Text="{Binding Path=Quantity}" Margin="10,0,10,0" VerticalAlignment="Center"  Width="100"/>
+                        <common:HorizontalPanel VerticalAlignment="Center" Grid.Column="2">
+                            <TextBlock Text="Quantity:" Margin="0 5 0 0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=Quantity}" Margin="10,0,10,0" VerticalAlignment="Center"/>
+                            <Button Width="25" Content="+" Click="PlusQuantity_Click" Tag="{Binding Path=Product}"/>
+                            <Button Width="25" Content="-" Click="MinusQuantity_Click" Tag="{Binding Path=Product}"/>
+                        </common:HorizontalPanel>
                         <common:NegativeButton Grid.Column="3" HorizontalAlignment="Right" Content="Remove" Width="80" Height="25"  
                                                Margin="0 0 10 0" Tag="{Binding Path=Product.Title}"  Click="RemoveProductFromCartClick" DockPanel.Dock="Right"/>
                     </DockPanel>

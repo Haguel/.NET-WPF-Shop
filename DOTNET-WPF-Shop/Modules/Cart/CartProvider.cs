@@ -57,20 +57,21 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             return cartProduct != null;
         }
 
-        public async void UpdateProductQuantity(ProductEntity product, int modifier)
+        public async Task UpdateProductQuantity(ProductEntity product, int modifier)
         {
             CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
             cartProduct.Quantity += modifier;
 
-            await dataContext.SaveChangesAsync();
+            dataContext.SaveChanges();
         }
 
-        public async Task<CartProductEntity> UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
+        public CartProductEntity UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
         {
             cartProduct.Quantity += modifier;
 
-            await dataContext.SaveChangesAsync();
+            dataContext.Entry(cartProduct).State = EntityState.Modified;
+            dataContext.SaveChanges();
 
             return cartProduct;
         }
