@@ -39,7 +39,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             {
                 if (_totalPrice != value)
                 {
-                    _totalPrice = Math.Round(value, 2);
+                    _totalPrice = Math.Round(value, 4);
 
                     OnPropertyChanged("TotalPrice");
                 }
@@ -126,7 +126,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             }
             else
             {
-                CartProductEntity updatedCartproduct = provider.UpdateProductQuantity(cartProduct, modifier);
+                CartProductEntity updatedCartproduct = cartProductProvider.UpdateProductQuantity(cartProduct, modifier);
 
                 CartProducts.Insert(deleteIndex, updatedCartproduct);
             }
@@ -141,7 +141,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 ProductEntity product = productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-                ChangeTotalPriceProp(-1, product.Price);
+                ChangeTotalPriceProp(-1 * cartProduct.Quantity, product.Price);
 
                 for (int i = CartProducts.Count - 1; i >= 0; i--)
                 {
@@ -196,6 +196,13 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            provider.RedirectToMainPage(this, mainView);
         }
     }
 }

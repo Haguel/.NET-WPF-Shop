@@ -114,6 +114,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private async Task HandleSortByComboBox()
         {
+            if (Products == null) return;
+
             ObservableCollection<ProductEntity> products = new();
             ComboBoxItem SortByOptionItem = SortByComboBox.SelectedItem as ComboBoxItem;
 
