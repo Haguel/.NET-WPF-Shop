@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,10 +30,11 @@ namespace DOTNET_WPF_Shop.Modules.Main
         private ProductProvider productProvider = new();
         private ProviderUtils providerUtils = new();
         private CancellationTokenSource cancelTokenSource;
+        private int _countOfProducts;
+        private bool isSortHandling = true;
 
         public String Username { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
-        private int _countOfProducts;
         public int CountOfProducts
         {
             get { return _countOfProducts; }
@@ -63,6 +65,23 @@ namespace DOTNET_WPF_Shop.Modules.Main
         public void ChangeCountOfProductProp(int modifier) { CountOfProducts += modifier;  }
         public void ZeroCountOfProductProp() { CountOfProducts = 0; }
 
+        private async Task LoadProducts()
+        {
+            ObservableCollection<ProductEntity> products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Title);
+
+            LoadingText.Visibility = Visibility.Collapsed;
+
+            await AddToProductsProp(products);
+        }
+
+        private async Task AddToProductsProp(ObservableCollection<ProductEntity> products)
+        {
+            foreach (ProductEntity product in products)
+            {
+                Products.Add(product);
+            }
+        }
+
         private async void NotifyAboutBuying(string pruductTitle)
         {
             CancellationToken cancelToken = cancelTokenSource.Token;
@@ -91,6 +110,33 @@ namespace DOTNET_WPF_Shop.Modules.Main
                     }
                 }
             }
+        }
+
+        private async Task HandleSortByComboBox()
+        {
+            ObservableCollection<ProductEntity> products = new();
+            ComboBoxItem SortByOptionItem = SortByComboBox.SelectedItem as ComboBoxItem;
+
+            Products.Clear();
+
+            if (SortByOptionItem.Name == SortByTitleAscItem.Name)
+            {
+                products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Title);
+            }
+            else if (SortByOptionItem.Name == SortByTitleDescItem.Name)
+            {
+                products = await provider.GetProductsSortedByDesc(ProductEntity => ProductEntity.Title);
+            }
+            else if (SortByOptionItem.Name == SortByPriceAscItem.Name)
+            {
+                products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Price.ToString());
+            }
+            else if (SortByOptionItem.Name == SortByPriceDescItem.Name)
+            {
+                products = await provider.GetProductsSortedByDesc(ProductEntity => ProductEntity.Price.ToString());
+            }
+            
+            AddToProductsProp(products);
         }
 
         private void MakeAllProductsVisible()
@@ -147,19 +193,25 @@ namespace DOTNET_WPF_Shop.Modules.Main
         {
             await cartView.LoadCartProducts();
 
-            ObservableCollection<ProductEntity> products = await provider.GetProductsAsync();
-
-            LoadingText.Visibility = Visibility.Collapsed;
-
-            foreach (ProductEntity product in products)
-            {
-                Products.Add(product);
-            }
+            await LoadProducts();
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox SortByComboBox = sender as ComboBox;
+            isSortHandling = SortByComboBox.IsDropDownOpen;
+
+            HandleSortByComboBox();
+        }
+
+        private void SortByComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+
         }
     }   
 }
