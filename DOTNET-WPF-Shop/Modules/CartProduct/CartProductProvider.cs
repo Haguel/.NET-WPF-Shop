@@ -53,5 +53,12 @@ namespace DOTNET_WPF_Shop.Modules.CartProduct
 
             return cartProduct;
         }
+
+        public async Task Remove(CartProductEntity cartProduct)
+        {
+            dataContext.CartProducts.Remove(cartProduct);
+            dataContext.SaveChanges();
+            dataContext.Entry(cartProduct).State = EntityState.Detached;
+        }
     }
 }

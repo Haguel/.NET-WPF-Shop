@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
 using DOTNET_WPF_Shop.Modules.CartProduct;
+using System.Windows;
 
 namespace DOTNET_WPF_Shop.Modules.Cart
 {
@@ -30,24 +31,23 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
         public CartEntity GetCart() { return cart; }
 
-        public async void RemoveAllProductsFromCart()
+        public async Task RemoveAllProductsFromCart()
         {
             List<CartProductEntity> cartProducts = await cartProductProvider.GetAllFromCart(cart);
 
             foreach (CartProductEntity cartProduct in cartProducts)
             {
-                dataContext.CartProducts.Remove(cartProduct);
+                cartProductProvider.Remove(cartProduct);
             }
 
             dataContext.SaveChanges();
         }
 
-        public async void RemoveProductFromCart(ProductEntity product)
+        public async Task RemoveProductFromCart(ProductEntity product)
         {
             CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-            dataContext.CartProducts.Remove(cartProduct);
-            dataContext.SaveChanges();
+            await cartProductProvider.Remove(cartProduct);
         }
 
         public async Task<bool> IsProductInCart(ProductEntity product)
