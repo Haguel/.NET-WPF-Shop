@@ -60,5 +60,15 @@ namespace DOTNET_WPF_Shop.Modules.CartProduct
             dataContext.SaveChanges();
             dataContext.Entry(cartProduct).State = EntityState.Detached;
         }
+
+        public CartProductEntity UpdateProductQuantity(CartProductEntity cartProduct, int modifier)
+        {
+            cartProduct.Quantity += modifier;
+
+            dataContext.Entry(cartProduct).State = EntityState.Modified;
+            dataContext.SaveChanges();
+
+            return cartProduct;
+        }
     }
 }

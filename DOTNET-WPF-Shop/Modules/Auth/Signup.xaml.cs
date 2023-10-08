@@ -64,10 +64,10 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                         return provider.Signup(signupUserDto); 
                     });
 
-                    cancelTokenSource.Cancel();
-
                     provider.RedirectToMainPage(this, user.Id, user.Username);
                 }
+
+                cancelTokenSource.Cancel();
             }
             catch (Exception ex)
             {
