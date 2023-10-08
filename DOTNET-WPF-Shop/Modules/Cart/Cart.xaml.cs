@@ -39,7 +39,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             {
                 if (_totalPrice != value)
                 {
-                    _totalPrice = value;
+                    _totalPrice = Math.Round(value, 2);
+
                     OnPropertyChanged("TotalPrice");
                 }
             }
@@ -92,6 +93,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 await UpdateProductQuantity(product, 1);
             }
 
+            ChangeTotalPriceProp(1, product.Price);
             mainView.ChangeCountOfProductProp(1); 
         }
 
@@ -120,7 +122,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
             if (cartProduct.Quantity == 1 && modifier < 0)
             {
-                provider.RemoveProductFromCart(product);
+                await provider.RemoveProductFromCart(product);
             }
             else
             {
@@ -182,10 +184,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             provider.RedirectToMainPage(this, mainView);
         }
 
-        private void EmptyCartButtonClick(object sender, RoutedEventArgs e)
+        private async void EmptyCartButtonClick(object sender, RoutedEventArgs e)
         {
             CartProducts.Clear();
-            provider.RemoveAllProductsFromCart();
+            await provider.RemoveAllProductsFromCart();
 
             ZeroTotalPriceProp();
             mainView.ZeroCountOfProductProp();
