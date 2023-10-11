@@ -16,6 +16,7 @@ namespace DOTNET_WPF_Shop.DB
         public DbSet<Entities.ProductEntity> Products { get; set; }
         public DbSet<Entities.CartEntity> Carts { get; set; }
         public DbSet<Entities.CartProductEntity> CartProducts { get; set; }
+        public DbSet<Entities.CategoryEntity> Categories { get; set; }
 
         public DataContext() : base() { }
 
@@ -39,6 +40,11 @@ namespace DOTNET_WPF_Shop.DB
                 .WithMany(cart => cart.CartProducts)
                 .HasForeignKey(cartProduct => cartProduct.CartId);
 
+            modelBuilder.Entity<ProductEntity>()
+                .HasOne(product => product.Category)
+                .WithMany(category => category.Products)
+                .HasForeignKey(product => product.CategoryId);
+
             modelBuilder.Entity<CartProductEntity>()
                 .HasOne(cartProduct => cartProduct.Product)
                 .WithMany(products => products.CartProducts)
@@ -50,6 +56,10 @@ namespace DOTNET_WPF_Shop.DB
 
             modelBuilder.Entity<ProductEntity>()
                 .HasIndex(product => product.Title)
+                .IsUnique();
+
+            modelBuilder.Entity<CategoryEntity>()
+                .HasIndex(category => category.Title)
                 .IsUnique();
         }
     }

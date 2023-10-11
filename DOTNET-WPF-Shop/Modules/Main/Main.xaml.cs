@@ -1,5 +1,6 @@
 ﻿using DOTNET_WPF_Shop.DB;
 using DOTNET_WPF_Shop.DB.Entities;
+using DOTNET_WPF_Shop.Modules.Category;
 using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Utils;
 using System;
@@ -25,15 +26,20 @@ namespace DOTNET_WPF_Shop.Modules.Main
 {
     public partial class Main : Window, INotifyPropertyChanged
     {
-        private Cart.Cart cartView;
         private MainProvider provider = new();
         private ProductProvider productProvider = new();
+        private CategoryProvider categoryProvider = new();
         private ProviderUtils providerUtils = new();
+
+        private string allCategory = "All";
+        private string currentSearchText = "";
+        private Cart.Cart cartView;
         private CancellationTokenSource cancelTokenSource;
         private int _countOfProducts;
-        private bool isSortHandling = true;
+        private List<ProductEntity> products = new();
 
         public String Username { get; set; }
+        public ObservableCollection<string> CategoryTitles { get; set; }
         public ObservableCollection<ProductEntity> Products { get; set; }
         public int CountOfProducts
         {
@@ -54,8 +60,11 @@ namespace DOTNET_WPF_Shop.Modules.Main
         {
             InitializeComponent();
 
-            cartView = new(userId, this);
+            CategoryTitles = new();
+            CategoryTitles.Add(allCategory);
+
             Products = new();
+            cartView = new(userId, this);
             CountOfProducts = 0;
 
             this.DataContext = this;
@@ -65,16 +74,26 @@ namespace DOTNET_WPF_Shop.Modules.Main
         public void ChangeCountOfProductProp(int modifier) { CountOfProducts += modifier;  }
         public void ZeroCountOfProductProp() { CountOfProducts = 0; }
 
+        private async Task LoadCategories()
+        {
+            List<CategoryEntity> categories = await categoryProvider.GetAll();
+
+            foreach (CategoryEntity category in categories)
+            {
+                CategoryTitles.Add(category.Title);
+            }
+        }
+
         private async Task LoadProducts()
         {
-            ObservableCollection<ProductEntity> products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Title);
+            products = await provider.GetProducts();
 
             LoadingText.Visibility = Visibility.Collapsed;
 
             await AddToProductsProp(products);
         }
 
-        private async Task AddToProductsProp(ObservableCollection<ProductEntity> products)
+        private async Task AddToProductsProp(List<ProductEntity> products)
         {
             foreach (ProductEntity product in products)
             {
@@ -92,7 +111,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
             if (!cancelToken.IsCancellationRequested) NotificationTextBlock.Text = string.Empty;
         }
 
-        private void BuyButtonClick(object sender, RoutedEventArgs e)
+        private async void BuyButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button buyButton)
             {
@@ -100,7 +119,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
                 {
                     if (productStackPanel.Children[1] is TextBlock productTitle)
                     {
-                        cartView.PutProduct(productProvider.GetByTitle(productTitle.Text));
+                        ProductEntity product = await productProvider.GetByTitle(productTitle.Text);
+                        cartView.PutProduct(product);
 
                         if (cancelTokenSource != null) cancelTokenSource.Cancel();
 
@@ -112,54 +132,86 @@ namespace DOTNET_WPF_Shop.Modules.Main
             }
         }
 
-        private async Task HandleSortByComboBox()
+        private void SetProductsFromCategory(CategoryEntity category)
         {
-            if (Products == null) return;
-
-            ObservableCollection<ProductEntity> products = new();
-            ComboBoxItem SortByOptionItem = SortByComboBox.SelectedItem as ComboBoxItem;
+            List<ProductEntity> categoryProducts = category.Products;    
 
             Products.Clear();
 
-            if (SortByOptionItem.Name == SortByTitleAscItem.Name)
+            foreach (ProductEntity product in categoryProducts) 
             {
-                products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Title);
+                Products.Add(product);
             }
-            else if (SortByOptionItem.Name == SortByTitleDescItem.Name)
+        }
+        
+        private async Task HandleFilterComboBox()
+        {
+            if (Products == null) return;
+
+            string currentCategoryTitle = FilterComboBox.SelectedItem as string;
+
+            if (currentCategoryTitle == allCategory)
             {
-                products = await provider.GetProductsSortedByDesc(ProductEntity => ProductEntity.Title);
+                SetAllProducts();
             }
-            else if (SortByOptionItem.Name == SortByPriceAscItem.Name)
+            else
             {
-                products = await provider.GetProductsSortedByAsc(ProductEntity => ProductEntity.Price.ToString());
+                CategoryEntity currentCategory = await categoryProvider.GetByTitle(currentCategoryTitle);
+
+                if (currentCategory == null) 
+                {
+                    MessageBox.Show("Error: There is no category with title: " + currentCategoryTitle);
+
+                    return;
+                }
+
+                SetProductsFromCategory(currentCategory);
             }
-            else if (SortByOptionItem.Name == SortByPriceDescItem.Name)
+
+            if(currentSearchText != "") HideProductsThatDontHaveSubString(currentSearchText);
+        }
+
+        private void SetAllProducts()
+        {
+            Products.Clear();
+
+            foreach (ProductEntity product in products) 
             {
-                products = await provider.GetProductsSortedByDesc(ProductEntity => ProductEntity.Price.ToString());
+                Products.Add(product);
             }
-            
-            AddToProductsProp(products);
         }
 
         private void MakeAllProductsVisible()
         {
-            foreach (var item in itemsListView.Items)
+            foreach (ProductEntity product in Products)
             {
-                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(item) as ListViewItem;
+                ListViewItem listViewItem = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
 
-                if (lvi != null) lvi.Visibility = Visibility.Visible;
+                listViewItem.Visibility = Visibility.Visible;
             }
         }
 
-        private void HideProductsThatDontHaveSubTitle(string subTitle)
+        private void HandleProductIfContainsSubString(ProductEntity product, ListViewItem listViewItem, string subString)
         {
-            var products = Products.Where(p => !p.Title.ToLower().Contains(subTitle.ToLower()));
-
-            foreach (var product in products)
+            if (product.Title.ToLower().Contains(subString.ToLower()))
             {
-                ListViewItem lvi = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
+                listViewItem.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                listViewItem.Visibility = Visibility.Collapsed;
+            }
+        }
 
-                if (lvi != null) lvi.Visibility = Visibility.Collapsed;
+        private void HideProductsThatDontHaveSubString(string subString)
+        {
+            List<ProductEntity> listViewProducts = itemsListView.Items.Cast<ProductEntity>().ToList();
+
+            foreach (ProductEntity product in listViewProducts)
+            {
+                ListViewItem listViewItem = itemsListView.ItemContainerGenerator.ContainerFromItem(product) as ListViewItem;
+
+                HandleProductIfContainsSubString(product, listViewItem, subString);
             }
         }
 
@@ -170,14 +222,15 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // this if statement is only intended for properly event working during the initialization
             if (Products == null || SearchBar == null || itemsListView == null) return;
-
-            MakeAllProductsVisible();
 
             if (SearchBar.Text != SearchBar.Tag)
             {
-                HideProductsThatDontHaveSubTitle(SearchBar.Text);
+                currentSearchText = SearchBar.Text;
+
+                MakeAllProductsVisible();
+
+                if (currentSearchText != "") HideProductsThatDontHaveSubString(currentSearchText);
             }
         }
 
@@ -195,6 +248,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
         {
             await cartView.LoadCartProducts();
 
+            await LoadCategories();
             await LoadProducts();
         }
 
@@ -203,17 +257,9 @@ namespace DOTNET_WPF_Shop.Modules.Main
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SortByComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox SortByComboBox = sender as ComboBox;
-            isSortHandling = SortByComboBox.IsDropDownOpen;
-
-            HandleSortByComboBox();
-        }
-
-        private void SortByComboBox_DropDownClosed(object sender, EventArgs e)
-        {
-
+            HandleFilterComboBox();
         }
     }   
 }

@@ -1,5 +1,6 @@
 ﻿using DOTNET_WPF_Shop.DB;
 using DOTNET_WPF_Shop.DB.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,24 @@ namespace DOTNET_WPF_Shop.Modules.Product
     {
         DataContext dataContext = new();
 
-        public ProductEntity GetByTitle(string title)
+        public async Task<ProductEntity> GetByTitle(string title)
         {
             ProductEntity product = dataContext
                 .Products
                 .FirstOrDefault(product => product.Title == title);
 
             return product;
+        }
+
+        public async Task<List<ProductEntity>> GetNotRemoved() 
+        {
+            List<ProductEntity> selectedProducts = await dataContext
+                .Products
+                .Where(product => product.IsRemoved == false)
+                .OrderByDescending(product => product.Title)
+                .ToListAsync();
+
+            return selectedProducts;
         }
 
     }

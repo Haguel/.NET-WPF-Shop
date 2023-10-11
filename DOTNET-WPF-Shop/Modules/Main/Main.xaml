@@ -50,14 +50,9 @@
         </Grid>
         <common:HorizontalPanel Grid.Row="1" HorizontalAlignment="Left" Margin="10 0 10 0">
             <TextBlock Foreground="#757575" FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}"
-                       VerticalAlignment="Center">Sort by:</TextBlock>
-            <ComboBox SelectedIndex="0" Margin="10 0 0 0" Height="30" x:Name="SortByComboBox"
-                      SelectionChanged="SortByComboBox_SelectionChanged"
-                      DropDownClosed="SortByComboBox_DropDownClosed">
-                <ComboBoxItem x:Name="SortByTitleAscItem">Title (A-Z)</ComboBoxItem>
-                <ComboBoxItem x:Name="SortByTitleDescItem">Title (Z-A)</ComboBoxItem>
-                <ComboBoxItem x:Name="SortByPriceAscItem">Price (Low-High)</ComboBoxItem>
-                <ComboBoxItem x:Name="SortByPriceDescItem">Price (High-Low)</ComboBoxItem>
+                        VerticalAlignment="Center">Filter: </TextBlock>
+            <ComboBox SelectedIndex="0" Margin="10 0 0 0" Height="30" x:Name="FilterComboBox" Width="100" 
+                        SelectionChanged="FilterComboBox_SelectionChanged" ItemsSource="{Binding CategoryTitles}">
             </ComboBox>
         </common:HorizontalPanel>
         <ListView ItemsSource="{Binding Products}" Grid.Row="2" x:Name="itemsListView">
