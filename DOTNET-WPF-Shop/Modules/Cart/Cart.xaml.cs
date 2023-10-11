@@ -138,7 +138,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             if (sender is Button removeProductButton)
             {
 
-                ProductEntity product = productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
+                ProductEntity product = await productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
                 ChangeTotalPriceProp(-1 * cartProduct.Quantity, product.Price);

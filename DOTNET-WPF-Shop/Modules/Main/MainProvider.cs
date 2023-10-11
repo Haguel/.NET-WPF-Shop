@@ -4,6 +4,7 @@ using DOTNET_WPF_Shop.Modules.Cart;
 using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Modules.User;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,34 +19,15 @@ namespace DOTNET_WPF_Shop.Modules.Main
     public class MainProvider
     {
         DataContext dataContext = new();
+        ProductProvider productProvider = new();
 
-        public async Task<ObservableCollection<ProductEntity>> GetProductsSortedByDesc(Expression<Func<ProductEntity, string>> expression)
+        public async Task<List<ProductEntity>> GetProducts()
         {
-            List<ProductEntity> selectedProducts = await dataContext
-                .Products
-                .Where(product => product.IsRemoved == false)
-                .OrderByDescending(expression)
-                .ToListAsync();
-
-            ObservableCollection<ProductEntity> products = selectedProducts == null ? new() : new(selectedProducts);
+            List<ProductEntity> selectedProducts = await productProvider.GetNotRemoved();
+            List<ProductEntity> products = selectedProducts == null ? new() : new(selectedProducts);
 
             return products;
         }
-
-        public async Task<ObservableCollection<ProductEntity>> GetProductsSortedByAsc(Expression<Func<ProductEntity, string>> expression)
-        {
-            List<ProductEntity> selectedProducts = await dataContext
-                .Products
-                .Where(product => product.IsRemoved == false)
-                .OrderBy(expression)
-                .ToListAsync();
-
-            ObservableCollection<ProductEntity> products = selectedProducts == null ? new() : new(selectedProducts);
-
-            return products;
-        }
-
-
 
         public void RedirectToCartPage(Main view, Cart.Cart cartView)
         {

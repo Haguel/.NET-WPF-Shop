@@ -43,7 +43,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <TextBlock Text="{Binding TotalPrice, StringFormat='Total: {0:n2}'}" Margin="0,0,10,0"/>
+            <TextBlock Text="{Binding TotalPrice, StringFormat='Total: {0:n2}$'}" Margin="0,0,10,0"/>
             <common:AcceptButton Width="100" Height="25">Buy</common:AcceptButton>
         </StackPanel>
     </Grid>
