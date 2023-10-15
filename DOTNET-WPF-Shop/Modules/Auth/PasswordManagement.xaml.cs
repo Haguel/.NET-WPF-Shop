@@ -29,17 +29,17 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             InitializeComponent();
         }
 
-        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
 
-        private void TextBoxGotFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxFocus(sender as TextBox);
         }
 
-        private void BackButtonClick(object sender, RoutedEventArgs e)
+        private void Event_BackButtonClick(object sender, RoutedEventArgs e)
         {
             provider.HidePage(this);
         }
@@ -74,7 +74,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             }
         }
 
-        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async void Event_AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             cancelTokenSource = new();
 

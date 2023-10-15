@@ -2,19 +2,10 @@
 using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {
@@ -29,17 +20,17 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             InitializeComponent();
         }
 
-        private void TextBoxGotFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxFocus(sender as TextBox);
         }
 
-        private void TextBoxLostFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxUnfocus(sender as TextBox);
         }
 
-        private void BackButtonClick(object sender, RoutedEventArgs e) 
+        private void Event_BackButtonClick(object sender, RoutedEventArgs e) 
         {
             provider.HidePage(this);
         }
@@ -77,7 +68,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             }
         }
 
-        private async void AcceptButtonClick(object sender, RoutedEventArgs e)
+        private async void Event_AcceptButtonClick(object sender, RoutedEventArgs e)
         {
             cancelTokenSource = new();
 

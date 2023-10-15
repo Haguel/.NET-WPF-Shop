@@ -3,13 +3,10 @@ using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.User;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 using System.Threading.Tasks;
 using DOTNET_WPF_Shop.Modules.CartProduct;
-using System.Windows;
 
 namespace DOTNET_WPF_Shop.Modules.Cart
 {

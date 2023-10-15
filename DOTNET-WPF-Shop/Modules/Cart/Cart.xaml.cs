@@ -1,24 +1,13 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.CartProduct;
 using DOTNET_WPF_Shop.Modules.Product;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Cart
 {
@@ -29,9 +18,9 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         private CartEntity cart;
         private CartProductProvider cartProductProvider = new();
         private ProductProvider productProvider = new();
+        private double _totalPrice;
         
         public ObservableCollection<CartProductEntity> CartProducts { get; set; }
-        private double _totalPrice;
         public double TotalPrice
         {
             get { return _totalPrice; }
@@ -133,7 +122,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
         }
 
-        private async void RemoveProductFromCartClick(object sender, RoutedEventArgs e)
+        private async void Event_RemoveProductFromCartClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button removeProductButton)
             {
@@ -157,7 +146,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             }
         }
 
-        private async void PlusQuantity_Click(object sender, RoutedEventArgs e)
+        private async void Event_PlusQuantityClick(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             ProductEntity product = button.Tag as ProductEntity;
@@ -168,7 +157,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             mainView.ChangeCountOfProductProp(1);
         }
 
-        private async void MinusQuantity_Click(object sender, RoutedEventArgs e)
+        private async void Event_MinusQuantityClick(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             ProductEntity product = button.Tag as ProductEntity;
@@ -179,12 +168,12 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             mainView.ChangeCountOfProductProp(-1);
         }
 
-        private void BackButtonClick(object sender, RoutedEventArgs e)
+        private void Event_BackButtonClick(object sender, RoutedEventArgs e)
         {
             provider.RedirectToMainPage(this, mainView);
         }
 
-        private async void EmptyCartButtonClick(object sender, RoutedEventArgs e)
+        private async void Event_EmptyCartButtonClick(object sender, RoutedEventArgs e)
         {
             CartProducts.Clear();
             await provider.RemoveAllProductsFromCart();
@@ -193,16 +182,16 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             mainView.ZeroCountOfProductProp();
         }
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private void Event_WindowClosing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
 
             provider.RedirectToMainPage(this, mainView);
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

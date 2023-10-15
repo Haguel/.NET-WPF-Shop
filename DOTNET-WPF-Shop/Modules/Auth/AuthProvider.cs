@@ -1,21 +1,12 @@
-﻿using BCrypt.Net;
-using DOTNET_WPF_Shop.DB;
-using DOTNET_WPF_Shop.DB.Entities;
+﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Auth.Dto;
-using DOTNET_WPF_Shop.Modules.Main;
-using DOTNET_WPF_Shop.Modules.Start;
 using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Modules.User.Dto;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {

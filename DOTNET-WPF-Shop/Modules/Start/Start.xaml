@@ -31,10 +31,12 @@
                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,0,20" Grid.Row="1">
-                <startCommon:StartButton Content="Sign up" Foreground="White" Margin="0,0,0,10" Click="SignupClick"
+                <startCommon:StartButton Content="Sign up" Foreground="White" Margin="0,0,0,10" Click="Event_SignupClick"
                         Background="{Binding Source={StaticResource globalProperties}, Path=mainColor}"/>
-                <startCommon:StartButton Content="Sign in" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Click="SigninClick" Margin="0,0,0,10"/>
-                <startCommon:StartButton Content="Change password" Background="Transparent" BorderBrush="#333333" Foreground="#333333" Click="ChangePasswordClick"/>
+                <startCommon:StartButton Content="Sign in" Background="Transparent" BorderBrush="#333333" 
+                                         Foreground="#333333" Click="Event_SigninClick" Margin="0,0,0,10"/>
+                <startCommon:StartButton Content="Change password" Background="Transparent" BorderBrush="#333333" 
+                                         Foreground="#333333" Click="Event_ChangePasswordClick"/>
             </StackPanel>
         </Grid>
     </Grid>

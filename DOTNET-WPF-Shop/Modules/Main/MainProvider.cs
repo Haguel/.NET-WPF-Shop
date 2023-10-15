@@ -5,20 +5,13 @@ using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Modules.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace DOTNET_WPF_Shop.Modules.Main
 {
     public class MainProvider
     {
-        DataContext dataContext = new();
         ProductProvider productProvider = new();
 
         public async Task<List<ProductEntity>> GetProducts()

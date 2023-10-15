@@ -1,5 +1,4 @@
-﻿using DOTNET_WPF_Shop.DB;
-using DOTNET_WPF_Shop.DB.Entities;
+﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Category;
 using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Utils;
@@ -7,20 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DOTNET_WPF_Shop.Modules.Main
 {
@@ -111,7 +101,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
             if (!cancelToken.IsCancellationRequested) NotificationTextBlock.Text = string.Empty;
         }
 
-        private async void BuyButtonClick(object sender, RoutedEventArgs e)
+        private async void Event_BuyButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button buyButton)
             {
@@ -215,12 +205,12 @@ namespace DOTNET_WPF_Shop.Modules.Main
             }
         }
 
-        private void CartButtonClick(object sender, RoutedEventArgs e)
+        private void Event_CartButtonClick(object sender, RoutedEventArgs e)
         {
             provider.RedirectToCartPage(this, cartView);
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void Event_TextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (Products == null || SearchBar == null || itemsListView == null) return;
 
@@ -234,17 +224,17 @@ namespace DOTNET_WPF_Shop.Modules.Main
             }
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxFocus(SearchBar);
         }
 
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void Event_TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             providerUtils.HandleTextBoxUnfocus(SearchBar);
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Event_WindowLoaded(object sender, RoutedEventArgs e)
         {
             await cartView.LoadCartProducts();
 
@@ -252,14 +242,14 @@ namespace DOTNET_WPF_Shop.Modules.Main
             await LoadProducts();
         }
 
+        private void Event_FilterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HandleFilterComboBox();
+        }
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            HandleFilterComboBox();
         }
     }   
 }
