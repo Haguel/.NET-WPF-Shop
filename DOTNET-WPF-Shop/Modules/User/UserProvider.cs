@@ -1,16 +1,11 @@
 ﻿using DOTNET_WPF_Shop.DB;
 using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Auth.Dto;
-using DOTNET_WPF_Shop.Modules.Main;
 using DOTNET_WPF_Shop.Modules.User.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace DOTNET_WPF_Shop.Modules.User
 {
@@ -60,8 +55,8 @@ namespace DOTNET_WPF_Shop.Modules.User
         public void Update(UpdateUserDto updateUserDto)
         {
             UserEntity user = dataContext
-                                .Users
-                                .FirstOrDefault(user => user.Id == updateUserDto.Id);
+                    .Users
+                    .FirstOrDefault(user => user.Id == updateUserDto.Id);
 
             user.Username = updateUserDto.Username;
             user.Email = updateUserDto.Email;

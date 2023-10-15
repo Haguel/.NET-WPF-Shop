@@ -20,14 +20,14 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <authCommon:AuthTitle Grid.Row="0">Sign up</authCommon:AuthTitle>
-        <authCommon:AuthTextBox x:Name="usernameField" Grid.Row="1" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Username">Username</authCommon:AuthTextBox>
-        <authCommon:AuthTextBox x:Name="emailField" Grid.Row="2" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
-        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="3" LostFocus="TextBoxLostFocus" GotFocus="TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox x:Name="usernameField" Grid.Row="1" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Username">Username</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox x:Name="emailField" Grid.Row="2" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="3" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
         <common:HorizontalCenteredPanel Grid.Row="4">
-            <authCommon:AuthDoneButton Click="AcceptButtonClick" x:Name="DoneButton">
+            <authCommon:AuthDoneButton Click="Event_AcceptButtonClick" x:Name="DoneButton">
                 Done
             </authCommon:AuthDoneButton>
-            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="BackButtonClick">Back</common:CancelButton>
+            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="Event_BackButtonClick">Back</common:CancelButton>
         </common:HorizontalCenteredPanel>
     </Grid>
 </Window>

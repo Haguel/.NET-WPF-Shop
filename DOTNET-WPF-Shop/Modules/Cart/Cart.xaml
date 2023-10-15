@@ -6,7 +6,7 @@
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
-        Closing="Window_Closing"
+        Closing="Event_WindowClosing"
         Title="Cart" Height="450" Width="800">
     <Window.Resources>
         <common:GlobalProperties x:Key="globalProperties" />
@@ -18,8 +18,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="10">
-            <common:NegativeButton Width="100" Height="25" Margin="0 0 10 0" Click="EmptyCartButtonClick">Empty cart</common:NegativeButton>
-            <common:CancelButton Click="BackButtonClick">Back</common:CancelButton>
+            <common:NegativeButton Width="100" Height="25" Margin="0 0 10 0" Click="Event_EmptyCartButtonClick">Empty cart</common:NegativeButton>
+            <common:CancelButton Click="Event_BackButtonClick">Back</common:CancelButton>
         </StackPanel>
         <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding CartProducts}" HorizontalContentAlignment="Stretch">
             <ListView.ItemTemplate>
@@ -33,11 +33,11 @@
                         <common:HorizontalPanel VerticalAlignment="Center" Grid.Column="2">
                             <TextBlock Text="Quantity:" Margin="0 5 0 0" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding Path=Quantity}" Margin="10,0,10,0" VerticalAlignment="Center"/>
-                            <Button Width="25" Content="+" Click="PlusQuantity_Click" Tag="{Binding Path=Product}"/>
-                            <Button Width="25" Content="-" Click="MinusQuantity_Click" Tag="{Binding Path=Product}"/>
+                            <Button Width="25" Content="+" Click="Event_PlusQuantityClick" Tag="{Binding Path=Product}"/>
+                            <Button Width="25" Content="-" Click="Event_MinusQuantityClick" Tag="{Binding Path=Product}"/>
                         </common:HorizontalPanel>
                         <common:NegativeButton Grid.Column="3" HorizontalAlignment="Right" Content="Remove" Width="80" Height="25"  
-                                               Margin="0 0 10 0" Tag="{Binding Path=Product.Title}"  Click="RemoveProductFromCartClick" DockPanel.Dock="Right"/>
+                                               Margin="0 0 10 0" Tag="{Binding Path=Product.Title}"  Click="Event_RemoveProductFromCartClick" DockPanel.Dock="Right"/>
                     </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
