@@ -12,5 +12,6 @@ namespace DOTNET_WPF_Shop.Modules.User.Dto
         public string Username { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public string ConfirmationCode { get; set; }
     }
 }

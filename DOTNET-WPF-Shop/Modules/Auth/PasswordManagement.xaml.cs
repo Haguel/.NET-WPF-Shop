@@ -41,7 +41,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         private void Event_BackButtonClick(object sender, RoutedEventArgs e)
         {
-            provider.HidePage(this);
+            providerUtils.RedirectTo(this, new Start.Start());
         }
 
         private async Task _AcceptButtonClick()
@@ -64,7 +64,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
                 cancelTokenSource.Cancel();
 
-                provider.HidePage(this);
+                providerUtils.RedirectTo(this, new Start.Start());
             }
             catch (Exception ex)
             {

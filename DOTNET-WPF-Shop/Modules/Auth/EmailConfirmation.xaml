@@ -1,0 +1,32 @@
+﻿<Window x:Class="DOTNET_WPF_Shop.Modules.Auth.EmailConfirmation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:authCommon="clr-namespace:DOTNET_WPF_Shop.Common.Auth"
+        xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
+        mc:Ignorable="d"
+        Title="EmailConfirmation" Height="450" Width="800">
+    <Window.Resources>
+        <common:GlobalProperties x:Key="globalProperties" />
+        <authCommon:Properties x:Key="authProperties" />
+    </Window.Resources>
+    <Grid MaxHeight="250">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <authCommon:AuthTitle Grid.Row="0">Email confirmation</authCommon:AuthTitle>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="{Binding Source={StaticResource globalProperties}, Path=defaultFontSize}">Please enter the code from the email you registered</TextBlock>
+        <authCommon:AuthTextBox x:Name="codeField" Grid.Row="2" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Code">Code</authCommon:AuthTextBox>
+        <common:HorizontalCenteredPanel Grid.Row="3">
+            <authCommon:AuthDoneButton Click="Event_AcceptButtonClick" Content="Done" x:Name="DoneButton" />
+            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}"
+                                 Margin="0 0 10 0" Click="Event_ResendCodeClick">Resend code</common:CancelButton>
+            <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="Event_BackButtonClick">Back</common:CancelButton>
+        </common:HorizontalCenteredPanel>
+    </Grid>
+</Window>

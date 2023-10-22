@@ -1,16 +1,11 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DOTNET_WPF_Shop.DB
 {
     public class DataContext : DbContext
     {
-        private string DbName = "DOTNET-WPF-SHOP";
+        private string DbName = Config.Config.GetJsonData("DB:name");
 
         public DbSet<Entities.UserEntity> Users { get; set; }
         public DbSet<Entities.ProductEntity> Products { get; set; }

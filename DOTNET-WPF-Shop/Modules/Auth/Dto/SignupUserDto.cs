@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DOTNET_WPF_Shop.Modules.User
 {
@@ -25,5 +19,10 @@ namespace DOTNET_WPF_Shop.Modules.User
         [Display(Name = "password")]
         [MinLength(6, ErrorMessage = "Password minimum length is 6 characters")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Confimation code is required")]
+        [Display(Name = "code")]
+        [StringLength(6, ErrorMessage = "Confimation code must be 6 characters length")]
+        public string ConfirmationCode { get; set; }
     }
 }

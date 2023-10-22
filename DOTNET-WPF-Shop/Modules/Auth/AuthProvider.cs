@@ -3,6 +3,8 @@ using DOTNET_WPF_Shop.Modules.Auth.Dto;
 using DOTNET_WPF_Shop.Modules.User;
 using DOTNET_WPF_Shop.Modules.User.Dto;
 using System;
+using System.Net.Mail;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,20 +12,58 @@ using System.Windows.Controls;
 
 namespace DOTNET_WPF_Shop.Modules.Auth
 {
+    class ConfirmationCodeException : Exception
+    {
+        public ConfirmationCodeException(): base("The email is not veryfied. Please verify your email") { }
+    }
+
     class AuthProvider
     {
         private UserProvider userProvider = new();
+
+        private SmtpClient GetSmtpClient()
+        {
+            String host = Config.Config.GetJsonData("smtp:host");
+            int port = int.Parse(Config.Config.GetJsonData("smtp:port"));
+            String email = Config.Config.GetJsonData("smtp:email");
+            String password = Config.Config.GetJsonData("smtp:password");
+            bool ssl = bool.Parse(Config.Config.GetJsonData("smtp:ssl"));
+
+            return new(host, port)
+            {
+                EnableSsl = ssl,
+                Credentials = new NetworkCredential(email, password)
+            };
+        }
+
+        public String GenerateConfirmationCode()
+        {
+            return Guid.NewGuid().ToString()[..6].ToUpperInvariant();
+        }
+
+        public void SendCodeToEmail(string email, string code)
+        {
+            using SmtpClient smtpClient = GetSmtpClient();
+            smtpClient.Send(
+                Config.Config.GetJsonData("smtp:email")!,
+                email,
+                "Signup successful",
+                code
+            );
+        }
+
+        public void RedirectToEmailConfirmationPage(Window view, UserEntity user)
+        {
+            EmailConfirmation emailConfirmationView = new EmailConfirmation(user, view);
+            view.Hide();
+            emailConfirmationView.ShowDialog();
+            view.Show();
+        }
 
         public void RedirectToMainPage(Window view, Guid userId, String username)
         {
             Main.Main mainView = new Main.Main(userId, username);
             mainView.Show();
-            view.Close();
-        }
-
-        public void HidePage(Window view)
-        {
-            new Start.Start().Show();
             view.Close();
         }
 
@@ -35,14 +75,23 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 Username = signupUserDto.Username,
                 Email = signupUserDto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                ConfirmationCode = signupUserDto.ConfirmationCode,
             };
 
             UserEntity user = await userProvider.GetByEmail(signupUserDto.Email);
 
-            if (user != null) throw new Exception("User already exists");
+            if (user != null)
+            {
+                if (user.ConfirmationCode != null) return user;
+                else throw new Exception("User already exists");
+            }
 
-            return userProvider.Create(createUserDto);
+            UserEntity newUser =  userProvider.Create(createUserDto);
+
+            SendCodeToEmail(newUser.Email, newUser.ConfirmationCode);
+
+            return newUser;
         }
 
         public async Task<UserEntity> Signin(SigninUserDto signinUserDto) 
@@ -53,7 +102,8 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
             bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(signinUserDto.Password, user.PasswordHash);
 
-            if(!isPasswordCorrect) throw new Exception("Incorrect password");
+            if (!isPasswordCorrect) throw new Exception("Incorrect password");
+            if (user.ConfirmationCode != null) throw new ConfirmationCodeException();
 
             return user;
         }

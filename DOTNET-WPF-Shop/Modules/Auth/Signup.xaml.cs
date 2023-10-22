@@ -32,7 +32,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
         private void Event_BackButtonClick(object sender, RoutedEventArgs e) 
         {
-            provider.HidePage(this);
+            providerUtils.RedirectTo(this, new Start.Start());
         }
 
         private async Task _AcceptButtonClick()
@@ -42,6 +42,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                 Username = usernameField.Text,
                 Email = emailField.Text,
                 Password = passwordField.Text,
+                ConfirmationCode = provider.GenerateConfirmationCode()
             };
 
             bool isDataValid = new ProviderUtils().ValidateDto(signupUserDto);
@@ -50,21 +51,21 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             {
                 if (isDataValid)
                 {
-                    UserEntity user = await Task.Run(() => 
+                    UserEntity user = await Task.Run(() =>
                     {
-                        return provider.Signup(signupUserDto); 
+                        return provider.Signup(signupUserDto);
                     });
 
-                    provider.RedirectToMainPage(this, user.Id, user.Username);
+                    provider.RedirectToEmailConfirmationPage(this, user);
                 }
 
                 cancelTokenSource.Cancel();
             }
             catch (Exception ex)
             {
-                cancelTokenSource.Cancel();
-
                 MessageBox.Show(ex.Message);
+
+                cancelTokenSource.Cancel();
             }
         }
 
