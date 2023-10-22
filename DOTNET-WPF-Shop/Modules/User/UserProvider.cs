@@ -40,6 +40,7 @@ namespace DOTNET_WPF_Shop.Modules.User
                 Username = createUserDto.Username,
                 Email = createUserDto.Email,
                 PasswordHash = createUserDto.PasswordHash,
+                ConfirmationCode = createUserDto.ConfirmationCode,
             };
 
             CartEntity usersCart = new CartEntity();
@@ -52,7 +53,7 @@ namespace DOTNET_WPF_Shop.Modules.User
             return newUser;
         }
 
-        public void Update(UpdateUserDto updateUserDto)
+        public UserEntity Update(UpdateUserDto updateUserDto)
         {
             UserEntity user = dataContext
                     .Users
@@ -61,8 +62,11 @@ namespace DOTNET_WPF_Shop.Modules.User
             user.Username = updateUserDto.Username;
             user.Email = updateUserDto.Email;
             user.PasswordHash = updateUserDto.PasswordHash;
+            user.ConfirmationCode = updateUserDto.ConfirmationCode;
 
             dataContext.SaveChanges();
+
+            return user;
         }
     }
 }

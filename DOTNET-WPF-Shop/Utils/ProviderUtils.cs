@@ -36,5 +36,11 @@ namespace DOTNET_WPF_Shop.Utils
         {
             if (textBox.Text == textBox.Tag as string) textBox.Text = "";
         }
+
+        public void RedirectTo(Window view, Window anotherView)
+        {
+            anotherView.Show();
+            view.Close();
+        }
     }
 }
