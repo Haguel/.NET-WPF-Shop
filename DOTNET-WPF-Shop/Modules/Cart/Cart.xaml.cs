@@ -20,6 +20,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         private ProductProvider productProvider = new();
         private double _totalPrice;
         
+        public bool isMainClosed = false;
         public ObservableCollection<CartProductEntity> CartProducts { get; set; }
         public double TotalPrice
         {
@@ -28,7 +29,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             {
                 if (_totalPrice != value)
                 {
-                    _totalPrice = Math.Round(value, 4);
+                    _totalPrice = Math.Round(value, 3);
 
                     OnPropertyChanged("TotalPrice");
                 }
@@ -131,6 +132,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
                 ChangeTotalPriceProp(-1 * cartProduct.Quantity, product.Price);
+                mainView.ChangeCountOfProductProp(-1 * cartProduct.Quantity);
 
                 for (int i = CartProducts.Count - 1; i >= 0; i--)
                 {
@@ -142,7 +144,6 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 }
 
                 provider.RemoveProductFromCart(product);
-                mainView.ChangeCountOfProductProp(-1);
             }
         }
 
@@ -181,12 +182,16 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             ZeroTotalPriceProp();
             mainView.ZeroCountOfProductProp();
         }
-
+        
         private void Event_WindowClosing(object sender, CancelEventArgs e)
         {
-            e.Cancel = true;
+            // In order to have opportunity to open this window this ShowDialog() again
+            if (!isMainClosed)
+            {
+                e.Cancel = true;
 
-            provider.RedirectToMainPage(this, mainView);
+                provider.RedirectToMainPage(this, mainView);
+            }
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

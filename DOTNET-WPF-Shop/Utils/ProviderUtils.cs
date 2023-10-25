@@ -42,5 +42,12 @@ namespace DOTNET_WPF_Shop.Utils
             anotherView.Show();
             view.Close();
         }
+
+        public void OpenModal(Window view, Window anotherView)
+        {
+            view.Hide();
+            anotherView.ShowDialog();
+            view.Show();
+        }
     }
 }

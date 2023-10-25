@@ -74,14 +74,15 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                     Username = currentUser.Username,
                     Email = currentUser.Email,
                     PasswordHash = currentUser.PasswordHash,
-                    ConfirmationCode = null
+                    ConfirmationCode = null!
                 };
 
                 userProvider.Update(updateUserDto);
 
                 provider.RedirectToMainPage(this, currentUser.Id, currentUser.Username);
+                previousView.Close();
             }
-            else MessageBox.Show("Wrong code");
+            else MessageBox.Show("Wrong code. Pleasy try again");
         }
     }
 }

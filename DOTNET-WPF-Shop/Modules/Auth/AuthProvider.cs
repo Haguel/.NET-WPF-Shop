@@ -48,16 +48,14 @@ namespace DOTNET_WPF_Shop.Modules.Auth
                 Config.Config.GetJsonData("smtp:email")!,
                 email,
                 "Signup successful",
-                code
+                "Verification code: " + code + "\nPlease, return to the verification window and provide this code to complete registration."
             );
         }
 
         public void RedirectToEmailConfirmationPage(Window view, UserEntity user)
         {
             EmailConfirmation emailConfirmationView = new EmailConfirmation(user, view);
-            view.Hide();
             emailConfirmationView.ShowDialog();
-            view.Show();
         }
 
         public void RedirectToMainPage(Window view, Guid userId, String username)

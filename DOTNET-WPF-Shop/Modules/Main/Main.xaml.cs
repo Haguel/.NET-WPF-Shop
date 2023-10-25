@@ -1,6 +1,5 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.Category;
-using DOTNET_WPF_Shop.Modules.Product;
 using DOTNET_WPF_Shop.Utils;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,6 @@ namespace DOTNET_WPF_Shop.Modules.Main
     public partial class Main : Window, INotifyPropertyChanged
     {
         private MainProvider provider = new();
-        private ProductProvider productProvider = new();
         private CategoryProvider categoryProvider = new();
         private ProviderUtils providerUtils = new();
 
@@ -54,8 +52,8 @@ namespace DOTNET_WPF_Shop.Modules.Main
             CategoryTitles.Add(allCategory);
 
             Products = new();
-            cartView = new(userId, this);
             CountOfProducts = 0;
+            cartView = new(userId, this);
 
             this.DataContext = this;
             Username = username;
@@ -107,17 +105,14 @@ namespace DOTNET_WPF_Shop.Modules.Main
             {
                 if (buyButton.Parent is StackPanel productStackPanel)
                 {
-                    if (productStackPanel.Children[1] is TextBlock productTitle)
-                    {
-                        ProductEntity product = await productProvider.GetByTitle(productTitle.Text);
-                        cartView.PutProduct(product);
+                    ProductEntity product = productStackPanel.Tag as ProductEntity;
+                    cartView.PutProduct(product);
 
-                        if (cancelTokenSource != null) cancelTokenSource.Cancel();
+                    if (cancelTokenSource != null) cancelTokenSource.Cancel();
 
-                        cancelTokenSource = new();
+                    cancelTokenSource = new();
 
-                        NotifyAboutBuying(productTitle.Text);
-                    }
+                    NotifyAboutBuying(product.Title);
                 }
             }
         }
@@ -207,7 +202,7 @@ namespace DOTNET_WPF_Shop.Modules.Main
 
         private void Event_CartButtonClick(object sender, RoutedEventArgs e)
         {
-            provider.RedirectToCartPage(this, cartView);
+            providerUtils.OpenModal(this, cartView);
         }
 
         private void Event_TextBoxTextChanged(object sender, TextChangedEventArgs e)
@@ -250,6 +245,13 @@ namespace DOTNET_WPF_Shop.Modules.Main
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            cartView.Show();
+            cartView.isMainClosed = true;
+            cartView.Close();
         }
     }   
 }
