@@ -11,7 +11,7 @@ namespace DOTNET_WPF_Shop.Modules.User
 {
     class UserProvider
     {
-        private DataContext dataContext = new();
+        private DataContext dataContext = App.dataContext;
 
         public async Task<UserEntity> GetByEmail(string email)
         {

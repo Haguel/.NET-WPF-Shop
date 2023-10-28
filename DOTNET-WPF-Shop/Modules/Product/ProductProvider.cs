@@ -11,13 +11,22 @@ namespace DOTNET_WPF_Shop.Modules.Product
 {
     public class ProductProvider
     {
-        DataContext dataContext = new();
+        DataContext dataContext = App.dataContext;
 
         public async Task<ProductEntity> GetByTitle(string title)
         {
             ProductEntity product = dataContext
                 .Products
                 .FirstOrDefault(product => product.Title == title);
+
+            return product;
+        }
+
+        public async Task<ProductEntity> GetById(Guid id)
+        {
+            ProductEntity product = dataContext
+                .Products
+                .FirstOrDefault(product => product.Id == id);
 
             return product;
         }

@@ -37,7 +37,7 @@
                             <Button Width="25" Content="-" Click="Event_MinusQuantityClick" Tag="{Binding Path=Product}"/>
                         </common:HorizontalPanel>
                         <common:NegativeButton Grid.Column="3" HorizontalAlignment="Right" Content="Remove" Width="80" Height="25"  
-                                               Margin="0 0 10 0" Tag="{Binding Path=Product.Title}"  Click="Event_RemoveProductFromCartClick" DockPanel.Dock="Right"/>
+                                                Margin="0 0 10 0" Tag="{Binding Path=Product}"  Click="Event_RemoveProductFromCartClick" DockPanel.Dock="Right"/>
                     </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -14,7 +14,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 {
     class ConfirmationCodeException : Exception
     {
-        public ConfirmationCodeException(): base("The email is not veryfied. Please verify your email") { }
+        public ConfirmationCodeException() : base("The email is not veryfied. Please verify your email") { }
     }
 
     class AuthProvider

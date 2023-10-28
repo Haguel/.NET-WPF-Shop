@@ -20,7 +20,8 @@
         </Grid.RowDefinitions>
         <authCommon:AuthTitle Grid.Row="0">Sign in</authCommon:AuthTitle>
         <authCommon:AuthTextBox x:Name="emailField" Grid.Row="1" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
-        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="2" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="2" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Password"
+                                TextChanged="Event_PasswordTextBoxTextChanged">Password</authCommon:AuthTextBox>
         <common:HorizontalCenteredPanel Grid.Row="3">
             <authCommon:AuthDoneButton Click="Event_AcceptButtonClick" Content="Done" x:Name="DoneButton" />
             <common:CancelButton Height="{Binding Source={StaticResource authProperties}, Path=buttonHeight}" Click="Event_BackButtonClick">Back</common:CancelButton>

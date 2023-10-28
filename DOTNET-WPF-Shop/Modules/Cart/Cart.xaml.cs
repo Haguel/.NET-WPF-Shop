@@ -17,11 +17,11 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         private CartProvider provider;
         private CartEntity cart;
         private CartProductProvider cartProductProvider = new();
-        private ProductProvider productProvider = new();
         private double _totalPrice;
+        private object priceLocker = new object();
         
         public bool isMainClosed = false;
-        public ObservableCollection<CartProductEntity> CartProducts { get; set; }
+        public ObservableCollection<CartProductEntity> CartProducts { get; init; }
         public double TotalPrice
         {
             get { return _totalPrice; }
@@ -30,6 +30,8 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                 if (_totalPrice != value)
                 {
                     _totalPrice = Math.Round(value, 3);
+
+                    if (Math.Abs(_totalPrice) < 0.001) _totalPrice = +0;
 
                     OnPropertyChanged("TotalPrice");
                 }
@@ -87,7 +89,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
             mainView.ChangeCountOfProductProp(1); 
         }
 
-        public void ChangeTotalPriceProp(int modifier, double price) { TotalPrice += modifier * price; }
+        public void ChangeTotalPriceProp(int modifier, double price) 
+        {
+            lock (priceLocker) { TotalPrice += modifier * price; }
+        }
         public void ZeroTotalPriceProp() { TotalPrice = 0; }
 
         private int GetIndexOfCartProduct(CartProductEntity cartProduct)
@@ -127,11 +132,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
         {
             if (sender is Button removeProductButton)
             {
-
-                ProductEntity product = await productProvider.GetByTitle(Convert.ToString(removeProductButton.Tag));
+                ProductEntity product = removeProductButton.Tag as ProductEntity;
                 CartProductEntity cartProduct = await cartProductProvider.Get(product, cart);
 
-                ChangeTotalPriceProp(-1 * cartProduct.Quantity, product.Price);
+                ChangeTotalPriceProp(-1 * cartProduct.Quantity, Math.Round(product.Price, 3));
                 mainView.ChangeCountOfProductProp(-1 * cartProduct.Quantity);
 
                 for (int i = CartProducts.Count - 1; i >= 0; i--)
@@ -143,7 +147,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
                     }
                 }
 
-                provider.RemoveProductFromCart(product);
+                await provider.RemoveProductFromCart(product);
             }
         }
 

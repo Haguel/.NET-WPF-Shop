@@ -9,7 +9,7 @@ namespace DOTNET_WPF_Shop.Modules.Category
 {
     public class CategoryProvider
     {
-        DataContext dataContext = new();
+        DataContext dataContext = App.dataContext;
 
         public async Task<List<CategoryEntity>> GetAll()
         {

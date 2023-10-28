@@ -16,6 +16,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
         private UserProvider userProvider = new UserProvider();
         private ProviderUtils providerUtils = new ProviderUtils();
         private CancellationTokenSource cancelTokenSource;
+        private string actualPasswordText = "";
 
         public Signin()
         {
@@ -37,12 +38,40 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             providerUtils.RedirectTo(this, new Start.Start());
         }
 
+        private void Event_PasswordTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!passwordField.Text.Equals(passwordField.Tag))
+            {
+                TextBox textBox = sender as TextBox;
+
+                // Disable this event to be able replace text with asterisks without triggering it
+                textBox.TextChanged -= Event_PasswordTextBoxTextChanged;
+
+                if (textBox.Text.Length < actualPasswordText.Length)
+                {
+                    actualPasswordText = actualPasswordText.Remove(actualPasswordText.Length - 1);
+                }
+                else if (textBox.Text.Length > actualPasswordText.Length)
+                {
+                    char addedChar = textBox.Text[textBox.Text.Length - 1];
+
+                    if (addedChar != ' ') actualPasswordText += addedChar;
+                }
+
+                textBox.Text = new string('*', actualPasswordText.Length);
+
+                textBox.SelectionStart = textBox.Text.Length;
+
+                textBox.TextChanged += Event_PasswordTextBoxTextChanged;
+            }
+        }
+
         private async Task _AcceptButtonClick()
         {
             SigninUserDto signinUserDto = new()
             {
                 Email = emailField.Text,
-                Password = passwordField.Text,
+                Password = actualPasswordText,
             };
 
             bool isDataValid = new ProviderUtils().ValidateDto(signinUserDto);

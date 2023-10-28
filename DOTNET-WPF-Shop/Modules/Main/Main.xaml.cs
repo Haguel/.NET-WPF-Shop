@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DOTNET_WPF_Shop.Modules.Main
 {
@@ -242,16 +244,16 @@ namespace DOTNET_WPF_Shop.Modules.Main
             HandleFilterComboBox();
         }
 
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private void Event_WindowClosing(object sender, CancelEventArgs e)
         {
             cartView.Show();
             cartView.isMainClosed = true;
             cartView.Close();
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }   
 }
