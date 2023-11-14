@@ -64,38 +64,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
                 textBox.TextChanged += Event_PasswordTextBoxTextChanged;
             }
-        }
-
-        private async Task _AcceptButtonClick()
-        {
-            SigninUserDto signinUserDto = new()
-            {
-                Email = emailField.Text,
-                Password = actualPasswordText,
-            };
-
-            bool isDataValid = new ProviderUtils().ValidateDto(signinUserDto);
-
-            try
-            {
-                if (isDataValid)
-                {
-                    UserEntity user = await Task.Run(() =>
-                    {
-                        return provider.Signin(signinUserDto);
-                    });
-
-                    provider.RedirectToMainPage(this, user.Id, user.Username);
-                }
-
-                cancelTokenSource.Cancel();
-            }
-            catch (ConfirmationCodeException ex)
-            {
-                MessageBox.Show(ex.Message);
-
                 UserEntity user = await userProvider.GetByEmail(signinUserDto.Email);
-
                 provider.RedirectToEmailConfirmationPage(this, user);
             }
             catch (Exception ex)
