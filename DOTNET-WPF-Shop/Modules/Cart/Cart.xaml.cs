@@ -1,6 +1,5 @@
 ﻿using DOTNET_WPF_Shop.DB.Entities;
 using DOTNET_WPF_Shop.Modules.CartProduct;
-using DOTNET_WPF_Shop.Modules.Product;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
