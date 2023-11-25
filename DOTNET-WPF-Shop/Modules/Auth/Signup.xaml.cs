@@ -62,6 +62,14 @@ namespace DOTNET_WPF_Shop.Modules.Auth
 
                 textBox.TextChanged += Event_PasswordTextBoxTextChanged;
             }
+        }
+
+        private async Task _AcceptButtonClick()
+        {
+            SignupUserDto signupUserDto = new()
+            {
+                Username = usernameField.Text,
+                Email = emailField.Text,
                 Password = actualPasswordText,
                 ConfirmationCode = provider.GenerateConfirmationCode()
             };

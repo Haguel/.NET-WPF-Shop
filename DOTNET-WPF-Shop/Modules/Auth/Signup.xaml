@@ -6,6 +6,7 @@
         xmlns:authCommon="clr-namespace:DOTNET_WPF_Shop.Common.Auth"
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
+        Icon="../../Static/Logo.png"
         Title="Signup" Height="450" Width="800">
     <Window.Resources>
         <authCommon:Properties x:Key="authProperties" />

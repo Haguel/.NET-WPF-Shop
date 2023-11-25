@@ -255,12 +255,5 @@ namespace DOTNET_WPF_Shop.Modules.Main
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            cartView.Show();
-            cartView.isMainClosed = true;
-            cartView.Close();
-        }
     }   
 }

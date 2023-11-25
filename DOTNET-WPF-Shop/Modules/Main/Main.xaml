@@ -6,6 +6,7 @@
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
         Loaded="Event_WindowLoaded"
+        Icon="../../Static/Logo.png"
         Title="{Binding cartView.TotalPrice}" Height="670" Width="750"
         Closing="Event_WindowClosing">
     <Window.Resources>

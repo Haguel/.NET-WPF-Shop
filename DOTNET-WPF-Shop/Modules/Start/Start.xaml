@@ -6,6 +6,7 @@
         xmlns:startCommon="clr-namespace:DOTNET_WPF_Shop.Common.Start"
         xmlns:common="clr-namespace:DOTNET_WPF_Shop.Common"
         mc:Ignorable="d"
+        Icon="../../Static/Logo.png"
         Title="Start" Height="450" Width="800">
     <Window.Resources>
         <common:GlobalProperties x:Key="globalProperties" />
