@@ -9,7 +9,7 @@ namespace DOTNET_WPF_Shop.Modules.CartProduct
 {
     public class CartProductProvider
     {
-        DataContext dataContext = new();
+        DataContext dataContext = App.dataContext;
 
         public async Task<CartProductEntity> Get(ProductEntity product, CartEntity cart)
         {
@@ -55,7 +55,7 @@ namespace DOTNET_WPF_Shop.Modules.CartProduct
         public async Task Remove(CartProductEntity cartProduct)
         {
             dataContext.CartProducts.Remove(cartProduct);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
             dataContext.Entry(cartProduct).State = EntityState.Detached;
         }
 

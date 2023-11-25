@@ -16,6 +16,7 @@ namespace DOTNET_WPF_Shop.Modules.Auth
         private UserProvider userProvider = new UserProvider();
         private ProviderUtils providerUtils = new ProviderUtils();
         private CancellationTokenSource cancelTokenSource;
+        private string actualPasswordText = "";
 
         public Signin()
         {
@@ -37,36 +38,33 @@ namespace DOTNET_WPF_Shop.Modules.Auth
             providerUtils.RedirectTo(this, new Start.Start());
         }
 
-        private async Task _AcceptButtonClick()
+        private void Event_PasswordTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
-            SigninUserDto signinUserDto = new()
+            if (!passwordField.Text.Equals(passwordField.Tag))
             {
-                Email = emailField.Text,
-                Password = passwordField.Text,
-            };
+                TextBox textBox = sender as TextBox;
 
-            bool isDataValid = new ProviderUtils().ValidateDto(signinUserDto);
+                // Disable this event to be able replace text with asterisks without triggering it
+                textBox.TextChanged -= Event_PasswordTextBoxTextChanged;
 
-            try
-            {
-                if (isDataValid)
+                if (textBox.Text.Length < actualPasswordText.Length)
                 {
-                    UserEntity user = await Task.Run(() =>
-                    {
-                        return provider.Signin(signinUserDto);
-                    });
+                    actualPasswordText = actualPasswordText.Remove(actualPasswordText.Length - 1);
+                }
+                else if (textBox.Text.Length > actualPasswordText.Length)
+                {
+                    char addedChar = textBox.Text[textBox.Text.Length - 1];
 
-                    provider.RedirectToMainPage(this, user.Id, user.Username);
+                    if (addedChar != ' ') actualPasswordText += addedChar;
                 }
 
-                cancelTokenSource.Cancel();
+                textBox.Text = new string('*', actualPasswordText.Length);
+
+                textBox.SelectionStart = textBox.Text.Length;
+
+                textBox.TextChanged += Event_PasswordTextBoxTextChanged;
             }
-            catch (ConfirmationCodeException ex)
-            {
-                MessageBox.Show(ex.Message);
-
                 UserEntity user = await userProvider.GetByEmail(signinUserDto.Email);
-
                 provider.RedirectToEmailConfirmationPage(this, user);
             }
             catch (Exception ex)

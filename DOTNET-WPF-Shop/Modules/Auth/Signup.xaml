@@ -22,7 +22,8 @@
         <authCommon:AuthTitle Grid.Row="0">Sign up</authCommon:AuthTitle>
         <authCommon:AuthTextBox x:Name="usernameField" Grid.Row="1" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Username">Username</authCommon:AuthTextBox>
         <authCommon:AuthTextBox x:Name="emailField" Grid.Row="2" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Email">Email</authCommon:AuthTextBox>
-        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="3" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Password">Password</authCommon:AuthTextBox>
+        <authCommon:AuthTextBox x:Name="passwordField" Grid.Row="3" LostFocus="Event_TextBoxLostFocus" GotFocus="Event_TextBoxGotFocus" Tag="Password"
+                                TextChanged="Event_PasswordTextBoxTextChanged">Password</authCommon:AuthTextBox>
         <common:HorizontalCenteredPanel Grid.Row="4">
             <authCommon:AuthDoneButton Click="Event_AcceptButtonClick" x:Name="DoneButton">
                 Done

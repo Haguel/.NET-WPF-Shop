@@ -28,7 +28,7 @@
                         <Image Source="{Binding Path=Product.ImageSrc}" Height="50" Width="80" Margin="0,0,10,0"/>
                         <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Width="100">
                             <TextBlock Text="{Binding Path=Product.Title}" FontWeight="Bold"/>
-                            <TextBlock Text="{c:Binding Product.Price * Quantity, StringFormat='Price: {0:n2}'}"/>
+                            <TextBlock Text="{c:Binding Product.Price * Quantity, StringFormat='Price: ${0:n2}'}"/>
                         </StackPanel>
                         <common:HorizontalPanel VerticalAlignment="Center" Grid.Column="2">
                             <TextBlock Text="Quantity:" Margin="0 5 0 0" VerticalAlignment="Center"/>
@@ -37,7 +37,7 @@
                             <Button Width="25" Content="-" Click="Event_MinusQuantityClick" Tag="{Binding Path=Product}"/>
                         </common:HorizontalPanel>
                         <common:NegativeButton Grid.Column="3" HorizontalAlignment="Right" Content="Remove" Width="80" Height="25"  
-                                               Margin="0 0 10 0" Tag="{Binding Path=Product.Title}"  Click="Event_RemoveProductFromCartClick" DockPanel.Dock="Right"/>
+                                                Margin="0 0 10 0" Tag="{Binding Path=Product}"  Click="Event_RemoveProductFromCartClick" DockPanel.Dock="Right"/>
                     </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

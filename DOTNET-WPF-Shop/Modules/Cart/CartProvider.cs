@@ -13,7 +13,7 @@ namespace DOTNET_WPF_Shop.Modules.Cart
     public class CartProvider
     {
         private CartEntity cart;
-        private DataContext dataContext = new();
+        private DataContext dataContext = App.dataContext;
         private UserProvider userProvider = new();
         private CartProductProvider cartProductProvider = new();
 
@@ -34,10 +34,10 @@ namespace DOTNET_WPF_Shop.Modules.Cart
 
             foreach (CartProductEntity cartProduct in cartProducts)
             {
-                cartProductProvider.Remove(cartProduct);
+                await cartProductProvider.Remove(cartProduct);
             }
 
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
         }
 
         public async Task RemoveProductFromCart(ProductEntity product)
